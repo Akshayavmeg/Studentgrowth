@@ -1,12 +1,12 @@
 // =============================================
 //   STUGROWTH — script.js
-//   Handles navigation and form checks.
+//   Handles navigation, validation, and login.
 //
 //   FLOW:
-//   1. Signup  → saves Full Name → goes to login
-//   2. Login   → reads Full Name → goes to dashboard
-//   3. Dashboard → displays Full Name in header
-//   4. Logout  → clears Full Name → goes to login
+//   1. Signup    → saves Full Name + Password → goes to login
+//   2. Login     → checks credentials → sets isLoggedIn → goes to dashboard
+//   3. Dashboard → checks isLoggedIn (redirect if missing) → displays Full Name
+//   4. Logout    → clears all stored data → goes to login
 // =============================================
 
 // This runs as soon as the page finishes loading
@@ -22,7 +22,7 @@ window.onload = function () {
 
   // =============================================
   // SIGN UP BUTTON — pages/signup.html
-  // Validates form, saves Full Name to localStorage,
+  // Saves Full Name and Password to localStorage,
   // then redirects to login page (../index.html)
   // =============================================
   const signupBtn = document.getElementById("signupBtn");
@@ -48,12 +48,14 @@ window.onload = function () {
         return;
       }
 
-      // Save Full Name in localStorage so the dashboard can display it
+      // Save Full Name and Password in localStorage
+      // These will be checked again when the user logs in
       localStorage.setItem("stuFullName", fullname);
+      localStorage.setItem("stuPassword", password);
 
       console.log("Sign Up successful. Full Name saved: " + fullname);
 
-      // Redirect to login page so the user can sign in
+      // Redirect to login page after successful signup
       // signup.html is inside pages/ so index.html is one level up
       window.location.href = "../index.html";
 
@@ -63,34 +65,51 @@ window.onload = function () {
 
   // =============================================
   // SIGN IN BUTTON — index.html
-  // Validates login fields, retrieves stored Full Name,
-  // then redirects to pages/dashboard.html
+  // Checks entered Full Name and Password against
+  // values stored in localStorage during signup.
+  // If correct → goes to dashboard
+  // If wrong   → shows alert
   // =============================================
   const signinBtn = document.getElementById("signinBtn");
 
   if (signinBtn) {
     signinBtn.addEventListener("click", function () {
 
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
+      // The username field is used to enter Full Name on login
+      const enteredName     = document.getElementById("username").value.trim();
+      const enteredPassword = document.getElementById("password").value.trim();
 
       // Make sure both fields are filled in
-      if (username === "" || password === "") {
-        alert("Please enter both your username and password.");
+      if (enteredName === "" || enteredPassword === "") {
+        alert("Please enter both your Full Name and password.");
         return;
       }
 
-      console.log("Sign In clicked. Username: " + username);
+      // Get the stored Full Name and Password from localStorage
+      const storedName     = localStorage.getItem("stuFullName");
+      const storedPassword = localStorage.getItem("stuPassword");
 
-      // If a Full Name was saved during signup, keep it.
-      // If not (e.g. direct login), save the username as the display name.
-      if (!localStorage.getItem("stuFullName")) {
-        localStorage.setItem("stuFullName", username);
+      // Check if a registered account exists
+      if (storedName === null || storedPassword === null) {
+        alert("No account found. Please register first.");
+        return;
       }
 
-      // TODO: Add real login check here (e.g. check with backend)
-      // Redirect to the dashboard
-      window.location.href = "pages/dashboard.html";
+      // Compare entered values with stored values
+      if (enteredName === storedName && enteredPassword === storedPassword) {
+
+        // Login is correct — set the logged in flag and go to dashboard
+        console.log("Login successful. Welcome, " + storedName);
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "pages/dashboard.html";
+
+      } else {
+
+        // Login is wrong — show error message
+        console.log("Login failed. Incorrect details entered.");
+        alert("Invalid login details. Please check your Full Name and password.");
+
+      }
 
     });
   }
@@ -112,8 +131,8 @@ window.onload = function () {
 
 
   // =============================================
-  // GET STARTED BUTTON — future landing page
-  // Redirects to signup
+  // GET STARTED BUTTON — landing.html
+  // Redirects to signup page
   // =============================================
   const getStartedBtn = document.getElementById("getStartedBtn");
 
@@ -127,24 +146,27 @@ window.onload = function () {
 
   // =============================================
   // LOGOUT BUTTON — pages/dashboard.html
-  // Clears stored Full Name and redirects to login
+  // Clears stored data and redirects to login page
   // =============================================
   const logoutBtn = document.getElementById("logoutBtn");
 
   if (logoutBtn) {
     logoutBtn.addEventListener("click", function () {
-      console.log("User logged out. Clearing stored name...");
-      // Remove the stored Full Name on logout
+      console.log("User logged out. Clearing stored data...");
+      // Remove stored name, password, and login flag on logout
       localStorage.removeItem("stuFullName");
+      localStorage.removeItem("stuPassword");
+      localStorage.removeItem("isLoggedIn");
       window.location.href = "../index.html";
     });
   }
 
 
   // =============================================
-  // DASHBOARD NAME DISPLAY — pages/dashboard.html
-  // Reads Full Name from localStorage and updates
-  // the topbar greeting and welcome banner heading
+  // DASHBOARD PROTECTION — pages/dashboard.html
+  // If user is not logged in, redirect to login.
+  // This stops anyone from accessing the dashboard
+  // directly without going through login first.
   // =============================================
   const topbarGreeting    = document.getElementById("topbarGreeting");
   const welcomeBannerName = document.getElementById("welcomeBannerName");
@@ -152,7 +174,17 @@ window.onload = function () {
   // Only run if we are on the dashboard page
   if (topbarGreeting || welcomeBannerName) {
 
-    // Get the saved Full Name (default to "Student" if nothing is saved)
+    // Check if the user is logged in
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+    if (isLoggedIn !== "true") {
+      // Not logged in — redirect back to login page
+      console.log("Access denied. Redirecting to login...");
+      window.location.href = "../index.html";
+      return; // Stop the rest of the code from running
+    }
+
+    // Logged in — get the saved Full Name and display it
     const fullName = localStorage.getItem("stuFullName") || "Student";
 
     console.log("Dashboard loaded. Displaying name: " + fullName);
