@@ -1,0 +1,376 @@
+/* =============================================
+   STUGROWTH — style.css
+   Modern SaaS Split-Screen Login Page
+   ============================================= */
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  color: #1a1a1a;
+  background: #f5f4f0;
+}
+
+/* ---------- Split Screen Container ---------- */
+.split-screen {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* =============================================
+   LEFT PANEL — Light Login Side
+   ============================================= */
+.left-panel {
+  flex: 0 0 45%;
+  background: #faf9f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 48px;
+  position: relative;
+}
+
+/* Subtle texture/noise overlay */
+.left-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9b99a' fill-opacity='0.07'%3E%3Cpath d='M0 0h40v40H0V0zm40 40h40v40H40V40zm0-40h2l-2 2V0zm0 4l4-4h2l-6 6V4zm0 4l8-8h2L40 10V8zm0 4L52 0h2L40 14v-2zm0 4L56 0h2L40 18v-2zm0 4L60 0h2L40 22v-2zm0 4L64 0h2L40 26v-2zm0 4L68 0h2L40 30v-2zm0 4L72 0h2L40 34v-2zm0 4L76 0h2L40 38v-2zm0 4L80 0v2L42 40h-2zm4 0L80 4v2L46 40h-2zm4 0L80 8v2L50 40h-2zm4 0l28-28v2L54 40h-2zm4 0l24-24v2L58 40h-2zm4 0l20-20v2L62 40h-2zm4 0l16-16v2L66 40h-2zm4 0l12-12v2L70 40h-2zm4 0l8-8v2l-6 6h-2zm4 0l4-4v2l-2 2h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.left-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 380px;
+}
+
+/* ---------- Logo ---------- */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 48px;
+}
+
+.logo-icon {
+  font-size: 22px;
+  color: #b8892a;
+  display: inline-block;
+  animation: spin-slow 8s linear infinite;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1510;
+  letter-spacing: -0.5px;
+}
+
+/* ---------- Welcome Heading ---------- */
+.welcome-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: #1a1510;
+  line-height: 1.15;
+  margin-bottom: 14px;
+  letter-spacing: -0.8px;
+}
+
+/* ---------- Description ---------- */
+.welcome-desc {
+  font-size: 14.5px;
+  font-weight: 300;
+  color: #7a6f62;
+  line-height: 1.65;
+  margin-bottom: 36px;
+}
+
+/* ---------- Form Groups ---------- */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #4a4035;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 13px 16px;
+  background: #ffffff;
+  border: 1.5px solid #e4ddd3;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14.5px;
+  color: #1a1510;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.form-group input::placeholder {
+  color: #b8afa5;
+  font-weight: 300;
+}
+
+.form-group input:focus {
+  border-color: #b8892a;
+  box-shadow: 0 0 0 3px rgba(184, 137, 42, 0.12);
+}
+
+/* ---------- Sign In Button ---------- */
+.btn-signin {
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #1a1510 0%, #3a2a10 60%, #b8892a 100%);
+  color: #f5ecd9;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(184, 137, 42, 0.28);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-signin:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(184, 137, 42, 0.38);
+  opacity: 0.93;
+}
+
+.btn-signin:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(184, 137, 42, 0.22);
+}
+
+/* ---------- Create Account Link ---------- */
+.create-account {
+  margin-top: 22px;
+  font-size: 13.5px;
+  color: #9a8f82;
+  font-weight: 300;
+  text-align: center;
+}
+
+.create-account a {
+  color: #b8892a;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.create-account a:hover {
+  color: #8a6518;
+  text-decoration: underline;
+}
+
+/* =============================================
+   RIGHT PANEL — Dark Gradient Feature Side
+   ============================================= */
+.right-panel {
+  flex: 0 0 55%;
+  background:
+    radial-gradient(ellipse at 70% 20%, rgba(184, 137, 42, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 30% 80%, rgba(90, 55, 10, 0.35) 0%, transparent 60%),
+    linear-gradient(145deg, #0a0806 0%, #1c1108 30%, #2e1a06 55%, #3d2208 75%, #1a0e03 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 56px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative glow orbs */
+.right-panel::before {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(184, 137, 42, 0.12) 0%, transparent 70%);
+  top: -80px;
+  right: -80px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.right-panel::after {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(120, 80, 15, 0.15) 0%, transparent 70%);
+  bottom: -60px;
+  left: 40px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.right-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* ---------- Right Heading ---------- */
+.right-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  letter-spacing: -0.8px;
+  margin-bottom: 18px;
+}
+
+/* Gold accent on last word feel — highlight */
+.right-heading em {
+  color: #d4a843;
+  font-style: normal;
+}
+
+/* ---------- Right Description ---------- */
+.right-desc {
+  font-size: 15px;
+  font-weight: 300;
+  color: #e0e0e0;
+  line-height: 1.7;
+  margin-bottom: 44px;
+  max-width: 400px;
+}
+
+/* ---------- Feature Cards ---------- */
+.feature-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 22px 24px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.07) inset;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(184, 137, 42, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.card-icon {
+  font-size: 26px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+  filter: drop-shadow(0 0 6px rgba(184, 137, 42, 0.4));
+}
+
+.card-content h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15.5px;
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 6px;
+  letter-spacing: 0.1px;
+}
+
+.card-content p {
+  font-size: 13.5px;
+  font-weight: 300;
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+/* =============================================
+   RESPONSIVE — Tablet / Mobile
+   ============================================= */
+@media (max-width: 900px) {
+  .split-screen {
+    flex-direction: column;
+  }
+
+  .left-panel,
+  .right-panel {
+    flex: none;
+    width: 100%;
+    padding: 48px 32px;
+  }
+
+  .left-inner,
+  .right-inner {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .right-heading {
+    font-size: 32px;
+  }
+
+  .welcome-heading {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .left-panel,
+  .right-panel {
+    padding: 36px 24px;
+  }
+
+  .right-heading {
+    font-size: 26px;
+  }
+
+  .welcome-heading {
+    font-size: 26px;
+  }
+
+  .card {
+    padding: 18px 18px;
+  }
+}
