@@ -1,6 +1,7 @@
 /* =============================================
    STUGROWTH — style.css
-   Modern SaaS Split-Screen Login Page
+   Shared styles for login & signup pages.
+   dashboard.html uses its own scoped styles.
    ============================================= */
 
 /* ---------- Reset & Base ---------- */
