@@ -1,7 +1,12 @@
 // =============================================
 //   STUGROWTH — script.js
-//   Handles navigation and basic form checks
-//   for index.html and pages/signup.html
+//   Handles navigation and form checks.
+//
+//   FLOW:
+//   1. Signup  → saves Full Name → goes to login
+//   2. Login   → reads Full Name → goes to dashboard
+//   3. Dashboard → displays Full Name in header
+//   4. Logout  → clears Full Name → goes to login
 // =============================================
 
 // This runs as soon as the page finishes loading
@@ -16,52 +21,9 @@ window.onload = function () {
 
 
   // =============================================
-  // SIGN IN BUTTON — index.html
-  // After validation, redirect to dashboard
-  // =============================================
-  const signinBtn = document.getElementById("signinBtn");
-
-  if (signinBtn) {
-    signinBtn.addEventListener("click", function () {
-
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      // Make sure both fields are filled in
-      if (username === "" || password === "") {
-        alert("Please enter both your username and password.");
-        return;
-      }
-
-      // Log for debugging
-      console.log("Sign In clicked. Username: " + username);
-
-      // TODO: Add real login check here (e.g. check with backend)
-      // For now, redirect directly to the dashboard
-      window.location.href = "pages/dashboard.html";
-
-    });
-  }
-
-
-  // =============================================
-  // CREATE ACCOUNT LINK — index.html
-  // Redirects user to the signup page
-  // =============================================
-  const createAccountLink = document.getElementById("createAccountLink");
-
-  if (createAccountLink) {
-    createAccountLink.addEventListener("click", function (event) {
-      event.preventDefault();
-      console.log("Redirecting to signup page...");
-      window.location.href = "pages/signup.html";
-    });
-  }
-
-
-  // =============================================
   // SIGN UP BUTTON — pages/signup.html
-  // After validation, redirect to dashboard
+  // Validates form, saves Full Name to localStorage,
+  // then redirects to login page (../index.html)
   // =============================================
   const signupBtn = document.getElementById("signupBtn");
 
@@ -86,13 +48,65 @@ window.onload = function () {
         return;
       }
 
-      // Log for debugging
-      console.log("Sign Up clicked. Name: " + fullname + " | Email: " + email);
+      // Save Full Name in localStorage so the dashboard can display it
+      localStorage.setItem("stuFullName", fullname);
 
-      // TODO: Add real signup logic here (e.g. send data to backend)
-      // signup.html is inside pages/ folder, so dashboard.html is in the same folder
-      window.location.href = "dashboard.html";
+      console.log("Sign Up successful. Full Name saved: " + fullname);
 
+      // Redirect to login page so the user can sign in
+      // signup.html is inside pages/ so index.html is one level up
+      window.location.href = "../index.html";
+
+    });
+  }
+
+
+  // =============================================
+  // SIGN IN BUTTON — index.html
+  // Validates login fields, retrieves stored Full Name,
+  // then redirects to pages/dashboard.html
+  // =============================================
+  const signinBtn = document.getElementById("signinBtn");
+
+  if (signinBtn) {
+    signinBtn.addEventListener("click", function () {
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      // Make sure both fields are filled in
+      if (username === "" || password === "") {
+        alert("Please enter both your username and password.");
+        return;
+      }
+
+      console.log("Sign In clicked. Username: " + username);
+
+      // If a Full Name was saved during signup, keep it.
+      // If not (e.g. direct login), save the username as the display name.
+      if (!localStorage.getItem("stuFullName")) {
+        localStorage.setItem("stuFullName", username);
+      }
+
+      // TODO: Add real login check here (e.g. check with backend)
+      // Redirect to the dashboard
+      window.location.href = "pages/dashboard.html";
+
+    });
+  }
+
+
+  // =============================================
+  // CREATE ACCOUNT LINK — index.html
+  // Redirects user to the signup page
+  // =============================================
+  const createAccountLink = document.getElementById("createAccountLink");
+
+  if (createAccountLink) {
+    createAccountLink.addEventListener("click", function (event) {
+      event.preventDefault();
+      console.log("Redirecting to signup page...");
+      window.location.href = "pages/signup.html";
     });
   }
 
@@ -108,6 +122,51 @@ window.onload = function () {
       console.log("Get Started button clicked");
       window.location.href = "pages/signup.html";
     });
+  }
+
+
+  // =============================================
+  // LOGOUT BUTTON — pages/dashboard.html
+  // Clears stored Full Name and redirects to login
+  // =============================================
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", function () {
+      console.log("User logged out. Clearing stored name...");
+      // Remove the stored Full Name on logout
+      localStorage.removeItem("stuFullName");
+      window.location.href = "../index.html";
+    });
+  }
+
+
+  // =============================================
+  // DASHBOARD NAME DISPLAY — pages/dashboard.html
+  // Reads Full Name from localStorage and updates
+  // the topbar greeting and welcome banner heading
+  // =============================================
+  const topbarGreeting    = document.getElementById("topbarGreeting");
+  const welcomeBannerName = document.getElementById("welcomeBannerName");
+
+  // Only run if we are on the dashboard page
+  if (topbarGreeting || welcomeBannerName) {
+
+    // Get the saved Full Name (default to "Student" if nothing is saved)
+    const fullName = localStorage.getItem("stuFullName") || "Student";
+
+    console.log("Dashboard loaded. Displaying name: " + fullName);
+
+    // Update the small greeting in the top navbar
+    if (topbarGreeting) {
+      topbarGreeting.textContent = "Hello, " + fullName + " 👋";
+    }
+
+    // Update the welcome banner heading
+    if (welcomeBannerName) {
+      welcomeBannerName.textContent = "Welcome back, " + fullName + "! 🎓";
+    }
+
   }
 
 };

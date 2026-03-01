@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stugrowth – Empowering Students to Track and Grow</title>
+  <link rel="stylesheet" href="static/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+
+    /* ================================================
+       RESET & BASE
+       ================================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0a0806;
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ================================================
+       NAVBAR
+       ================================================ */
+    .landing-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      height: 70px;
+      background: rgba(8, 6, 4, 0.85);
+      border-bottom: 1px solid rgba(184, 137, 42, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Logo */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      font-size: 20px;
+      color: #b8892a;
+      display: inline-block;
+      animation: spin-slow 8s linear infinite;
+    }
+
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .nav-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #f0e4c8;
+      letter-spacing: -0.3px;
+    }
+
+    /* Nav buttons */
+    .nav-buttons {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-nav-login {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      color: #c0a870;
+      background: transparent;
+      border: 1.5px solid rgba(184, 137, 42, 0.35);
+      border-radius: 9px;
+      padding: 9px 22px;
+      text-decoration: none;
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-nav-login:hover {
+      color: #f0e4c8;
+      border-color: #b8892a;
+      background: rgba(184, 137, 42, 0.08);
+    }
+
+    .btn-nav-register {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: #0a0806;
+      background: linear-gradient(135deg, #d4a843 0%, #b8892a 100%);
+      border: none;
+      border-radius: 9px;
+      padding: 9px 22px;
+      text-decoration: none;
+      transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      box-shadow: 0 3px 14px rgba(184, 137, 42, 0.30);
+    }
+
+    .btn-nav-register:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(184, 137, 42, 0.40);
+    }
+
+    /* ================================================
+       HERO SECTION
+       ================================================ */
+    .hero-section {
+      min-height: calc(100vh - 70px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 40px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 0%,   rgba(184, 137, 42, 0.16) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 100%, rgba(90, 55, 10, 0.28) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 80%,  rgba(60, 30, 5, 0.20) 0%, transparent 50%),
+        linear-gradient(170deg, #0a0806 0%, #110d06 40%, #1c1208 70%, #0d0904 100%);
+    }
+
+    /* Decorative background orbs */
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(184, 137, 42, 0.07) 0%, transparent 65%);
+      top: -150px; left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-section::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(120, 70, 10, 0.10) 0%, transparent 65%);
+      bottom: -100px; right: 10%;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #b8892a;
+      background: rgba(184, 137, 42, 0.12);
+      border: 1px solid rgba(184, 137, 42, 0.28);
+      border-radius: 50px;
+      padding: 6px 16px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .hero-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 56px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.12;
+      letter-spacing: -1.2px;
+      margin-bottom: 22px;
+      animation: fadeUp 0.55s ease 0.08s both;
+    }
+
+    .hero-heading .gold {
+      color: #d4a843;
+    }
+
+    .hero-desc {
+      font-size: 17px;
+      font-weight: 300;
+      color: #c0b09a;
+      line-height: 1.75;
+      max-width: 580px;
+      margin: 0 auto 40px;
+      animation: fadeUp 0.55s ease 0.15s both;
+    }
+
+    /* Hero buttons */
+    .hero-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.55s ease 0.22s both;
+    }
+
+    .btn-hero-primary {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: #0a0806;
+      background: linear-gradient(135deg, #d4a843 0%, #b8892a 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 14px 32px;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(184, 137, 42, 0.35);
+      transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-hero-primary:hover {
+      opacity: 0.88;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(184, 137, 42, 0.45);
+    }
+
+    .btn-hero-secondary {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: #c0a870;
+      background: transparent;
+      border: 1.5px solid rgba(184, 137, 42, 0.35);
+      border-radius: 12px;
+      padding: 14px 32px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-hero-secondary:hover {
+      color: #f0e4c8;
+      border-color: #b8892a;
+      background: rgba(184, 137, 42, 0.08);
+      transform: translateY(-2px);
+    }
+
+    /* ================================================
+       FEATURES SECTION
+       ================================================ */
+    .features-section {
+      padding: 100px 60px;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(60, 35, 5, 0.35) 0%, transparent 60%),
+        #0e0b07;
+      position: relative;
+    }
+
+    .features-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(184, 137, 42, 0.30), transparent);
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #b8892a;
+      margin-bottom: 14px;
+    }
+
+    .section-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: #ffffff;
+      text-align: center;
+      letter-spacing: -0.6px;
+      margin-bottom: 14px;
+    }
+
+    .section-desc {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 300;
+      color: #9a8a72;
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto 60px;
+    }
+
+    /* Feature cards grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 36px 28px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .feature-card:nth-child(1) { animation-delay: 0.10s; }
+    .feature-card:nth-child(2) { animation-delay: 0.18s; }
+    .feature-card:nth-child(3) { animation-delay: 0.26s; }
+
+    /* Gold top accent line on each card */
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 28px; right: 28px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(184, 137, 42, 0.55), transparent);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(184, 137, 42, 0.30);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+    }
+
+    .feature-card-icon {
+      font-size: 36px;
+      margin-bottom: 20px;
+      display: inline-block;
+      filter: drop-shadow(0 0 8px rgba(184, 137, 42, 0.35));
+    }
+
+    .feature-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 12px;
+      letter-spacing: -0.2px;
+    }
+
+    .feature-card-desc {
+      font-size: 14px;
+      font-weight: 300;
+      color: #e0e0e0;
+      line-height: 1.7;
+    }
+
+    /* ================================================
+       FOOTER
+       ================================================ */
+    .landing-footer {
+      padding: 36px 60px;
+      background: #060402;
+      border-top: 1px solid rgba(184, 137, 42, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .footer-logo-icon {
+      font-size: 16px;
+      color: #b8892a;
+    }
+
+    .footer-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #c0a870;
+      letter-spacing: -0.2px;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      font-weight: 300;
+      color: #4a3e2e;
+    }
+
+    /* ================================================
+       ANIMATION
+       ================================================ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ================================================
+       RESPONSIVE
+       ================================================ */
+    @media (max-width: 900px) {
+      .landing-nav   { padding: 0 28px; }
+      .hero-heading  { font-size: 38px; }
+      .hero-section  { padding: 60px 28px; }
+      .features-section { padding: 70px 28px; }
+      .features-grid { grid-template-columns: 1fr; max-width: 480px; }
+      .landing-footer { padding: 28px; flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 560px) {
+      .hero-heading  { font-size: 30px; }
+      .hero-desc     { font-size: 15px; }
+      .nav-logo-text { font-size: 18px; }
+      .section-heading { font-size: 26px; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ================================================
+       NAVBAR
+       ================================================ -->
+  <nav class="landing-nav">
+
+    <!-- Logo -->
+    <a href="landing.html" class="nav-logo">
+      <span class="nav-logo-icon">&#9670;</span>
+      <span class="nav-logo-text">Stugrowth</span>
+    </a>
+
+    <!-- Nav Buttons -->
+    <div class="nav-buttons">
+      <a href="index.html" class="btn-nav-login">Login</a>
+      <a href="pages/signup.html" class="btn-nav-register">Register</a>
+    </div>
+
+  </nav><!-- /landing-nav -->
+
+
+  <!-- ================================================
+       HERO SECTION
+       ================================================ -->
+  <section class="hero-section">
+
+    <div class="hero-inner">
+
+      <!-- Badge -->
+      <span class="hero-badge">&#x2728; AI-Powered Student Platform</span>
+
+      <!-- Heading -->
+      <h1 class="hero-heading">
+        Empowering Students<br />
+        to <span class="gold">Track</span> and <span class="gold">Grow</span>
+      </h1>
+
+      <!-- Description -->
+      <p class="hero-desc">
+        Stugrowth helps students monitor their learning, stay on top of progress,
+        and achieve their academic goals — with a personalised AI-powered dashboard
+        built just for them.
+      </p>
+
+      <!-- Buttons -->
+      <div class="hero-buttons">
+        <a href="pages/signup.html" class="btn-hero-primary" id="getStartedBtn">
+          &#x1F680; Get Started
+        </a>
+        <a href="pages/signup.html" class="btn-hero-secondary">
+          Register Free
+        </a>
+      </div>
+
+    </div><!-- /hero-inner -->
+
+  </section><!-- /hero-section -->
+
+
+  <!-- ================================================
+       FEATURES SECTION
+       ================================================ -->
+  <section class="features-section">
+
+    <p class="section-label">&#x1F4A1; What We Offer</p>
+    <h2 class="section-heading">Everything you need to succeed</h2>
+    <p class="section-desc">
+      Three powerful tools built to help every student study smarter, not harder.
+    </p>
+
+    <div class="features-grid">
+
+      <!-- Card 1: Track Progress -->
+      <div class="feature-card">
+        <div class="feature-card-icon">&#x1F4C8;</div>
+        <h3 class="feature-card-title">Track Progress</h3>
+        <p class="feature-card-desc">
+          Monitor your academic growth week by week. See how far you've come and
+          what milestones are next — all in one clear, visual dashboard.
+        </p>
+      </div>
+
+      <!-- Card 2: Personalised Learning -->
+      <div class="feature-card">
+        <div class="feature-card-icon">&#x1F9E0;</div>
+        <h3 class="feature-card-title">Personalised Learning</h3>
+        <p class="feature-card-desc">
+          Get AI-matched course recommendations and study plans tailored to your
+          weak subjects, learning style, and personal goals.
+        </p>
+      </div>
+
+      <!-- Card 3: Smart Dashboard -->
+      <div class="feature-card">
+        <div class="feature-card-icon">&#x1F5A5;&#xFE0F;</div>
+        <h3 class="feature-card-title">Smart Dashboard</h3>
+        <p class="feature-card-desc">
+          A clean, organised hub for your courses, timetable, and targets. Everything
+          you need to stay focused and on track — in one place.
+        </p>
+      </div>
+
+    </div><!-- /features-grid -->
+
+  </section><!-- /features-section -->
+
+
+  <!-- ================================================
+       FOOTER
+       ================================================ -->
+  <footer class="landing-footer">
+
+    <a href="landing.html" class="footer-logo">
+      <span class="footer-logo-icon">&#9670;</span>
+      <span class="footer-logo-text">Stugrowth</span>
+    </a>
+
+    <p class="footer-copy">
+      &copy; 2025 Stugrowth. Built for students, by students.
+    </p>
+
+  </footer><!-- /landing-footer -->
+
+
+  <script src="static/script.js"></script>
+
+</body>
+</html>
