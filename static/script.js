@@ -1,6 +1,7 @@
 // =============================================
 //   STUGROWTH — script.js
-//   Basic JavaScript for the Stugrowth project
+//   Handles navigation and basic form checks
+//   for index.html and pages/signup.html
 // =============================================
 
 // This runs as soon as the page finishes loading
@@ -13,7 +14,11 @@ window.onload = function () {
   const currentPage = window.location.pathname;
   console.log("Current page: " + currentPage);
 
-  // ---- Sign In Button (index.html) ----
+
+  // =============================================
+  // SIGN IN BUTTON — index.html
+  // After validation, redirect to dashboard
+  // =============================================
   const signinBtn = document.getElementById("signinBtn");
 
   if (signinBtn) {
@@ -22,21 +27,42 @@ window.onload = function () {
       const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value.trim();
 
-      // Basic validation — make sure fields are not empty
+      // Make sure both fields are filled in
       if (username === "" || password === "") {
         alert("Please enter both your username and password.");
         return;
       }
 
-      // TODO: Add real login logic here later (e.g. send to backend)
-      console.log("Sign In button clicked");
-      console.log("Username entered: " + username);
-      alert("Sign In clicked! Backend not connected yet.");
+      // Log for debugging
+      console.log("Sign In clicked. Username: " + username);
+
+      // TODO: Add real login check here (e.g. check with backend)
+      // For now, redirect directly to the dashboard
+      window.location.href = "pages/dashboard.html";
 
     });
   }
 
-  // ---- Sign Up Button (signup.html) ----
+
+  // =============================================
+  // CREATE ACCOUNT LINK — index.html
+  // Redirects user to the signup page
+  // =============================================
+  const createAccountLink = document.getElementById("createAccountLink");
+
+  if (createAccountLink) {
+    createAccountLink.addEventListener("click", function (event) {
+      event.preventDefault();
+      console.log("Redirecting to signup page...");
+      window.location.href = "pages/signup.html";
+    });
+  }
+
+
+  // =============================================
+  // SIGN UP BUTTON — pages/signup.html
+  // After validation, redirect to dashboard
+  // =============================================
   const signupBtn = document.getElementById("signupBtn");
 
   if (signupBtn) {
@@ -48,45 +74,39 @@ window.onload = function () {
       const password        = document.getElementById("password").value.trim();
       const confirmPassword = document.getElementById("confirm-password").value.trim();
 
-      // Basic validation — check all fields are filled
+      // Check all fields are filled
       if (fullname === "" || email === "" || username === "" || password === "" || confirmPassword === "") {
         alert("Please fill in all the fields before signing up.");
         return;
       }
 
-      // Check if passwords match
+      // Check both passwords match
       if (password !== confirmPassword) {
         alert("Passwords do not match. Please try again.");
         return;
       }
 
-      // TODO: Add real signup logic here later (e.g. send to backend)
-      console.log("Sign Up button clicked");
-      console.log("Name: " + fullname + " | Email: " + email + " | Username: " + username);
-      alert("Account created! Backend not connected yet.");
+      // Log for debugging
+      console.log("Sign Up clicked. Name: " + fullname + " | Email: " + email);
+
+      // TODO: Add real signup logic here (e.g. send data to backend)
+      // For now, redirect directly to the dashboard
+      window.location.href = "../pages/dashboard.html";
 
     });
   }
 
-  // ---- Create Account Link (index.html) ----
-  const createAccountLink = document.getElementById("createAccountLink");
 
-  if (createAccountLink) {
-    createAccountLink.addEventListener("click", function (event) {
-      event.preventDefault();
-      console.log("Redirecting to signup page...");
-      window.location.href = "signup.html";
-    });
-  }
-
-  // ---- Get Started Button (for future dashboard/landing page) ----
+  // =============================================
+  // GET STARTED BUTTON — future landing page
+  // Redirects to signup
+  // =============================================
   const getStartedBtn = document.getElementById("getStartedBtn");
 
   if (getStartedBtn) {
     getStartedBtn.addEventListener("click", function () {
       console.log("Get Started button clicked");
-      // TODO: Redirect to signup or dashboard later
-      window.location.href = "signup.html";
+      window.location.href = "pages/signup.html";
     });
   }
 
