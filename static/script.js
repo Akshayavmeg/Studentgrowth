@@ -90,8 +90,8 @@ window.onload = function () {
       console.log("Sign Up clicked. Name: " + fullname + " | Email: " + email);
 
       // TODO: Add real signup logic here (e.g. send data to backend)
-      // For now, redirect directly to the dashboard
-      window.location.href = "../pages/dashboard.html";
+      // signup.html is inside pages/ folder, so dashboard.html is in the same folder
+      window.location.href = "dashboard.html";
 
     });
   }
