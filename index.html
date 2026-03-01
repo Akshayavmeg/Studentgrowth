@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stugrowth – Sign In</title>
+  <link rel="stylesheet" href="static/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <div class="split-screen">
+
+    <!-- LEFT SIDE: Login Panel -->
+    <div class="left-panel">
+
+      <div class="left-inner">
+
+        <!-- Logo -->
+        <div class="logo">
+          <span class="logo-icon">&#9670;</span>
+          <span class="logo-text">Stugrowth</span>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="welcome-heading">Welcome back.</h1>
+
+        <!-- Description -->
+        <p class="welcome-desc">
+          Sign in to continue your personalised learning journey and track your progress.
+        </p>
+
+        <!-- Login Form -->
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button class="btn-signin" id="signinBtn">Sign In</button>
+
+        <p class="create-account">
+          Don't have an account?
+          <a href="#" id="createAccountLink">Create one here</a>
+        </p>
+
+      </div><!-- /left-inner -->
+
+    </div><!-- /left-panel -->
+
+
+    <!-- RIGHT SIDE: Feature Panel -->
+    <div class="right-panel">
+
+      <div class="right-inner">
+
+        <!-- Main Heading -->
+        <h2 class="right-heading">Your personalised path to success.</h2>
+
+        <!-- Description -->
+        <p class="right-desc">
+          Stugrowth uses AI to tailor your studies, organise your week, and keep you on track — every step of the way.
+        </p>
+
+        <!-- Feature Cards -->
+        <div class="feature-cards">
+
+          <div class="card">
+            <div class="card-icon">&#x1F9E0;</div>
+            <div class="card-content">
+              <h3>AI Course Matching</h3>
+              <p>Get course recommendations tailored to your goals, strengths, and learning style.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-icon">&#x1F4C5;</div>
+            <div class="card-content">
+              <h3>Weekly Timetable</h3>
+              <p>Automatically generate a balanced weekly schedule to keep you productive and focused.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-icon">&#x1F4C8;</div>
+            <div class="card-content">
+              <h3>Progress Tracking</h3>
+              <p>Visualise your growth with clear milestones and stay motivated every day.</p>
+            </div>
+          </div>
+
+        </div><!-- /feature-cards -->
+
+      </div><!-- /right-inner -->
+
+    </div><!-- /right-panel -->
+
+  </div><!-- /split-screen -->
+
+  <script src="static/script.js"></script>
+</body>
+</html>
