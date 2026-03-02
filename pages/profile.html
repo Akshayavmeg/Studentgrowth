@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stugrowth – My Profile</title>
+  <link rel="stylesheet" href="../static/style.css" />
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; overflow:hidden; }
+    .app-shell { display:flex; height:100vh; width:100vw; }
+    .content-area { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="../index.html" class="sidebar-logo">
+      <span class="sidebar-logo-icon">&#9670;</span>
+      <span class="sidebar-logo-text">Stugrowth</span>
+    </a>
+    <nav class="sidebar-nav">
+      <p class="nav-label">Menu</p>
+      <a href="dashboard.html" class="nav-item"><span class="ni">🏠</span> Dashboard</a>
+      <a href="plan.html"      class="nav-item"><span class="ni">📋</span> My Plan</a>
+      <a href="quiz.html"      class="nav-item"><span class="ni">🧩</span> Skill Test</a>
+      <a href="profile.html"   class="nav-item active"><span class="ni">👤</span> Profile</a>
+      <a href="settings.html"  class="nav-item"><span class="ni">⚙️</span> Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="nav-item logout" id="logoutBtn"><span class="ni">🚪</span> Logout</button>
+    </div>
+  </aside>
+
+  <!-- CONTENT AREA -->
+  <div class="content-area">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="topbar-bread"><a href="../index.html">Stugrowth</a> › <a href="dashboard.html">Dashboard</a> › Profile</span>
+        <span class="topbar-title">My Profile</span>
+      </div>
+      <div class="topbar-right">
+        <span class="topbar-greeting" id="topbarGreeting">Hello, Student 👋</span>
+        <div class="profile-dropdown-wrap">
+          <div class="topbar-avatar" id="topbarAvatar">S</div>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="dropdown-header">
+              <div class="dropdown-name"   id="ddName">Student</div>
+              <div class="dropdown-branch" id="ddBranch">CSE · 1st Year</div>
+            </div>
+            <a href="profile.html"  class="dropdown-item"><span class="di">👤</span> Profile</a>
+            <a href="settings.html" class="dropdown-item"><span class="di">⚙️</span> Settings</a>
+            <button class="dropdown-item dd-logout" id="dropdownLogout"><span class="di">🚪</span> Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN SCROLL -->
+    <div class="main-scroll">
+
+      <!-- PAGE HEADER -->
+      <div style="margin-bottom:20px;animation:fadeUp 0.38s ease both;">
+        <p class="page-eyebrow">👤 Student Profile</p>
+        <h1 class="page-heading">Your <span class="gold">Profile</span></h1>
+        <p class="page-desc">All your academic information and learning progress in one place.</p>
+      </div>
+
+      <a href="dashboard.html" class="btn-back">← Back to Dashboard</a>
+
+      <!-- PROFILE HERO -->
+      <div class="profile-hero">
+        <div class="profile-avatar-big" id="heroAvatar">S</div>
+        <div class="profile-hero-text">
+          <h2 id="heroName">Student Name</h2>
+          <p id="heroSub">College · Branch · Year</p>
+        </div>
+      </div>
+
+      <!-- PROFILE GRID: Info + Academic -->
+      <div class="profile-grid">
+
+        <!-- PERSONAL INFO CARD -->
+        <div class="profile-info-card" style="animation:fadeUp 0.48s ease 0.05s both;">
+          <p class="profile-section-title">🎓 Personal Information</p>
+          <div class="profile-row">
+            <span class="profile-row-label">Full Name</span>
+            <span class="profile-row-value" id="profName">—</span>
+          </div>
+          <div class="profile-row">
+            <span class="profile-row-label">College</span>
+            <span class="profile-row-value" id="profCollege">—</span>
+          </div>
+          <div class="profile-row">
+            <span class="profile-row-label">Branch</span>
+            <span class="profile-row-value" id="profBranch">—</span>
+          </div>
+          <div class="profile-row">
+            <span class="profile-row-label">Class / Year</span>
+            <span class="profile-row-value" id="profYear">—</span>
+          </div>
+        </div>
+
+        <!-- ACADEMIC PERFORMANCE CARD -->
+        <div class="profile-info-card" style="animation:fadeUp 0.48s ease 0.09s both;">
+          <p class="profile-section-title">🧠 Academic Performance</p>
+          <div class="profile-row">
+            <span class="profile-row-label">IQ Score</span>
+            <span class="profile-row-value" id="profIQ">—</span>
+          </div>
+          <div class="profile-row">
+            <span class="profile-row-label">Learning Level</span>
+            <span class="profile-row-value">
+              <span class="level-badge" id="profLevelBadge">—</span>
+            </span>
+          </div>
+          <div class="profile-row">
+            <span class="profile-row-label">Average Marks</span>
+            <span class="profile-row-value" id="profAvg">—</span>
+          </div>
+          <div class="profile-row">
+            <span class="profile-row-label">Weak Subject</span>
+            <span class="profile-row-value" id="profWeak" style="color:#b03030;">—</span>
+          </div>
+          <div class="profile-row" id="quizRow" style="display:none;">
+            <span class="profile-row-label">Skill Test Score</span>
+            <span class="profile-row-value" id="profQuiz">—</span>
+          </div>
+        </div>
+
+      </div><!-- /profile-grid -->
+
+      <!-- SUBJECT MARKS CARD -->
+      <div class="profile-info-card" id="subjectMarksCard" style="margin-bottom:20px;animation:fadeUp 0.48s ease 0.13s both;display:none;">
+        <p class="profile-section-title">📊 Latest Subject-Wise Marks</p>
+        <div id="subjectMarksList" style="display:flex;flex-direction:column;gap:9px;margin-top:4px;"></div>
+      </div>
+
+      <!-- PROGRESS HISTORY CARD -->
+      <div class="history-card" style="animation:fadeUp 0.5s ease 0.17s both;">
+        <p class="profile-section-title">📈 Progress History</p>
+        <p style="font-size:13px;font-weight:300;color:#7a6a52;margin-bottom:16px;">
+          Every time you generate a learning plan, your result is recorded here.
+        </p>
+        <div class="history-list" id="historyList">
+          <div class="history-empty" id="historyEmpty">No progress history yet. Generate your first learning plan on the Dashboard.</div>
+        </div>
+      </div>
+
+      <!-- EDIT PROFILE NOTE -->
+      <div style="background:#faf8f4;border:1px solid #eee8df;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;animation:fadeUp 0.5s ease 0.22s both;">
+        <span style="font-size:22px;">✏️</span>
+        <div style="flex:1;">
+          <p style="font-size:13.5px;font-weight:600;color:#1a1510;margin-bottom:3px;">Want to update your profile?</p>
+          <p style="font-size:12.5px;font-weight:300;color:#7a6a52;">Go to Settings to change your password or reset progress. To update your name, college, or branch, please create a new account.</p>
+        </div>
+        <a href="settings.html" class="btn-secondary" style="font-size:13px;padding:9px 16px;flex-shrink:0;">⚙️ Settings</a>
+      </div>
+
+    </div><!-- /main-scroll -->
+  </div><!-- /content-area -->
+</div><!-- /app-shell -->
+
+<script src="../static/script.js"></script>
+</body>
+</html>

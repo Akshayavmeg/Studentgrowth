@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stugrowth – Settings</title>
+  <link rel="stylesheet" href="../static/style.css" />
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; overflow:hidden; }
+    .app-shell { display:flex; height:100vh; width:100vw; }
+    .content-area { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="../index.html" class="sidebar-logo">
+      <span class="sidebar-logo-icon">&#9670;</span>
+      <span class="sidebar-logo-text">Stugrowth</span>
+    </a>
+    <nav class="sidebar-nav">
+      <p class="nav-label">Menu</p>
+      <a href="dashboard.html" class="nav-item"><span class="ni">🏠</span> Dashboard</a>
+      <a href="plan.html"      class="nav-item"><span class="ni">📋</span> My Plan</a>
+      <a href="quiz.html"      class="nav-item"><span class="ni">🧩</span> Skill Test</a>
+      <a href="profile.html"   class="nav-item"><span class="ni">👤</span> Profile</a>
+      <a href="settings.html"  class="nav-item active"><span class="ni">⚙️</span> Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="nav-item logout" id="logoutBtn"><span class="ni">🚪</span> Logout</button>
+    </div>
+  </aside>
+
+  <!-- CONTENT AREA -->
+  <div class="content-area">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="topbar-bread"><a href="../index.html">Stugrowth</a> › <a href="dashboard.html">Dashboard</a> › Settings</span>
+        <span class="topbar-title">Settings</span>
+      </div>
+      <div class="topbar-right">
+        <span class="topbar-greeting" id="topbarGreeting">Hello, Student 👋</span>
+        <div class="profile-dropdown-wrap">
+          <div class="topbar-avatar" id="topbarAvatar">S</div>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="dropdown-header">
+              <div class="dropdown-name"   id="ddName">Student</div>
+              <div class="dropdown-branch" id="ddBranch">CSE · 1st Year</div>
+            </div>
+            <a href="profile.html"  class="dropdown-item"><span class="di">👤</span> Profile</a>
+            <a href="settings.html" class="dropdown-item"><span class="di">⚙️</span> Settings</a>
+            <button class="dropdown-item dd-logout" id="dropdownLogout"><span class="di">🚪</span> Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN SCROLL -->
+    <div class="main-scroll">
+
+      <!-- PAGE HEADER -->
+      <div style="margin-bottom:20px;animation:fadeUp 0.38s ease both;">
+        <p class="page-eyebrow">⚙️ Account Settings</p>
+        <h1 class="page-heading">Your <span class="gold">Settings</span></h1>
+        <p class="page-desc">Manage your account, password, and progress data.</p>
+      </div>
+
+      <a href="dashboard.html" class="btn-back">← Back to Dashboard</a>
+
+      <!-- SETTINGS GRID -->
+      <div class="settings-grid">
+
+        <!-- CHANGE PASSWORD CARD -->
+        <div class="settings-card" style="animation:fadeUp 0.45s ease 0.05s both;">
+          <div class="settings-card-header">
+            <span class="settings-card-icon">🔒</span>
+            <span class="settings-card-title">Change Password</span>
+          </div>
+
+          <div class="settings-row">
+            <label for="currentPass">Current Password</label>
+            <input type="password" id="currentPass" placeholder="Enter current password" />
+          </div>
+          <div class="settings-row">
+            <label for="newPass">New Password</label>
+            <input type="password" id="newPass" placeholder="Enter new password" />
+          </div>
+          <div class="settings-row">
+            <label for="confirmPass">Confirm New Password</label>
+            <input type="password" id="confirmPass" placeholder="Re-enter new password" />
+          </div>
+
+          <div style="margin-top:6px;">
+            <button class="btn-primary" id="changePassBtn" style="width:100%;justify-content:center;">
+              🔒 Update Password
+            </button>
+          </div>
+        </div>
+
+        <!-- ACCOUNT ACTIONS CARD -->
+        <div class="settings-card" style="animation:fadeUp 0.45s ease 0.10s both;">
+          <div class="settings-card-header">
+            <span class="settings-card-icon">🛠️</span>
+            <span class="settings-card-title">Account Actions</span>
+          </div>
+
+          <div class="settings-action-row">
+
+            <!-- Reset Progress -->
+            <div class="settings-action-item">
+              <div class="settings-action-text">
+                <h4>Reset Progress</h4>
+                <p>Clear all marks, IQ, history, and recommendations. Your account stays.</p>
+              </div>
+              <button class="settings-action-btn red-btn" id="resetProgressBtn">Reset</button>
+            </div>
+
+            <!-- Clear History -->
+            <div class="settings-action-item">
+              <div class="settings-action-text">
+                <h4>Clear History Only</h4>
+                <p>Remove all saved progress history entries while keeping your current results.</p>
+              </div>
+              <button class="settings-action-btn gold-btn" id="clearHistoryBtn">Clear</button>
+            </div>
+
+            <!-- Logout -->
+            <div class="settings-action-item">
+              <div class="settings-action-text">
+                <h4>Logout</h4>
+                <p>Sign out of your account and return to the login page.</p>
+              </div>
+              <button class="settings-action-btn red-btn" id="settingsLogoutBtn">Logout</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ACCOUNT DETAILS CARD (read-only) -->
+        <div class="settings-card" style="animation:fadeUp 0.45s ease 0.14s both;">
+          <div class="settings-card-header">
+            <span class="settings-card-icon">🎓</span>
+            <span class="settings-card-title">Account Details</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div class="profile-row">
+              <span class="profile-row-label">Full Name</span>
+              <span class="profile-row-value" id="settName">—</span>
+            </div>
+            <div class="profile-row">
+              <span class="profile-row-label">College</span>
+              <span class="profile-row-value" id="settCollege">—</span>
+            </div>
+            <div class="profile-row">
+              <span class="profile-row-label">Branch</span>
+              <span class="profile-row-value" id="settBranch">—</span>
+            </div>
+            <div class="profile-row">
+              <span class="profile-row-label">Year</span>
+              <span class="profile-row-value" id="settYear">—</span>
+            </div>
+          </div>
+          <p style="font-size:12px;color:#9a8a6a;margin-top:14px;font-style:italic;">
+            To change your name, college, or branch, create a new account.
+          </p>
+        </div>
+
+        <!-- ABOUT CARD -->
+        <div class="settings-card" style="animation:fadeUp 0.45s ease 0.18s both;">
+          <div class="settings-card-header">
+            <span class="settings-card-icon">ℹ️</span>
+            <span class="settings-card-title">About Stugrowth</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="padding:12px 14px;background:#faf8f4;border:1px solid #eee8df;border-radius:10px;">
+              <p style="font-size:13px;font-weight:600;color:#1a1510;margin-bottom:4px;">Stugrowth v2.0</p>
+              <p style="font-size:12.5px;font-weight:300;color:#7a6a52;line-height:1.55;">A student performance platform built with HTML, CSS, and JavaScript using localStorage.</p>
+            </div>
+            <div style="padding:12px 14px;background:#faf8f4;border:1px solid #eee8df;border-radius:10px;">
+              <p style="font-size:13px;font-weight:600;color:#1a1510;margin-bottom:4px;">How IQ is calculated</p>
+              <p style="font-size:12.5px;font-weight:300;color:#7a6a52;line-height:1.55;">IQ Score = 70 + (Average Marks × 0.6)<br>IQ &lt; 95 → Slow Learner<br>95–115 → Average Learner<br>&gt; 115 → Fast Learner</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /settings-grid -->
+
+    </div><!-- /main-scroll -->
+  </div><!-- /content-area -->
+</div><!-- /app-shell -->
+
+<!-- TOAST NOTIFICATION -->
+<div class="toast" id="toast"></div>
+
+<script src="../static/script.js"></script>
+</body>
+</html>
