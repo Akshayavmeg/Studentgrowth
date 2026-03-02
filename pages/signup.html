@@ -5,183 +5,119 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stugrowth – Create Account</title>
   <link rel="stylesheet" href="../static/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-
   <style>
-    .left-panel {
-      align-items: flex-start;
-      overflow-y: auto;
-      padding-top: 48px;
-      padding-bottom: 48px;
-    }
+    body { overflow-y: auto; }
+    .left-panel { align-items: flex-start; overflow-y: auto; padding-top: 48px; padding-bottom: 48px; justify-content: flex-start; }
     .left-inner { margin: auto; }
-    .logo        { margin-bottom: 32px; }
-    .welcome-heading { font-size: 32px; margin-bottom: 10px; }
-    .welcome-desc    { margin-bottom: 28px; }
-    .form-group      { margin-bottom: 16px; }
-    .btn-signin      { margin-top: 6px; }
-
-    /* Style the class dropdown to match other inputs */
-    .form-group select {
-      width: 100%;
-      padding: 12px 16px;
-      background: #f5f4f0;
-      border: 1.5px solid #d8d0c4;
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      color: #1a1a1a;
-      outline: none;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b8892a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 36px;
-      cursor: pointer;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    .form-group select:focus {
-      border-color: #b8892a;
-      box-shadow: 0 0 0 3px rgba(184,137,42,0.10);
-    }
-    .form-group select option {
-      background: #ffffff;
-      color: #1a1a1a;
-    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
+<div class="split-screen">
 
-  <div class="split-screen">
+  <!-- LEFT: Form -->
+  <div class="left-panel">
+    <div class="left-inner">
 
-    <!-- LEFT SIDE: Signup Form Panel -->
-    <div class="left-panel">
-      <div class="left-inner">
+      <div class="logo">
+        <span class="logo-icon">&#9670;</span>
+        <span class="logo-text">Stugrowth</span>
+      </div>
 
-        <!-- Logo -->
-        <div class="logo">
-          <span class="logo-icon">&#9670;</span>
-          <span class="logo-text">Stugrowth</span>
-        </div>
+      <h1 class="welcome-heading">Create your account.</h1>
+      <p class="welcome-desc">Join thousands of students building smarter study habits with AI-powered guidance.</p>
 
-        <!-- Heading -->
-        <h1 class="welcome-heading">Create your account.</h1>
-        <p class="welcome-desc">
-          Join thousands of students building smarter study habits with AI-powered guidance.
-        </p>
+      <!-- Full Name -->
+      <div class="form-group">
+        <label for="fullname">Full Name</label>
+        <input type="text" id="fullname" placeholder="Enter your full name" autocomplete="name" />
+      </div>
 
-        <!-- Full Name -->
+      <!-- College Name -->
+      <div class="form-group">
+        <label for="college">College / Institution</label>
+        <input type="text" id="college" placeholder="e.g. ABC Engineering College" autocomplete="organization" />
+      </div>
+
+      <!-- Branch + Year -->
+      <div class="form-row">
         <div class="form-group">
-          <label for="fullname">Full Name</label>
-          <input type="text" id="fullname" name="fullname"
-            placeholder="Enter your full name" autocomplete="name" />
-        </div>
-
-        <!-- Email -->
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email"
-            placeholder="Enter your email address" autocomplete="email" />
-        </div>
-
-        <!-- Username -->
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username"
-            placeholder="Choose a username" autocomplete="username" />
-        </div>
-
-        <!-- Class / Standard — NEW FIELD -->
-        <div class="form-group">
-          <label for="stu-class">Class / Standard</label>
-          <select id="stu-class" name="stu-class">
-            <option value="" disabled selected>Select your class</option>
-            <option>8th Class</option>
-            <option>9th Class</option>
-            <option>10th Class</option>
-            <option>11th Class</option>
-            <option>12th Class</option>
-            <option>B.Tech 1st Year</option>
-            <option>B.Tech 2nd Year</option>
-            <option>B.Tech 3rd Year</option>
-            <option>B.Tech 4th Year</option>
-            <option>Diploma 1st Year</option>
-            <option>Diploma 2nd Year</option>
+          <label for="branch">Branch / Department</label>
+          <select id="branch">
+            <option value="" disabled selected>Select branch</option>
+            <option value="CSE">CSE</option>
+            <option value="ECE">ECE</option>
+            <option value="MECH">MECH</option>
+            <option value="CIVIL">CIVIL</option>
+            <option value="EEE">EEE</option>
+            <option value="IT">IT</option>
           </select>
         </div>
+        <div class="form-group">
+          <label for="year">Class / Year</label>
+          <select id="year">
+            <option value="" disabled selected>Select year</option>
+            <option value="1st Year">1st Year</option>
+            <option value="2nd Year">2nd Year</option>
+            <option value="3rd Year">3rd Year</option>
+            <option value="4th Year">4th Year</option>
+          </select>
+        </div>
+      </div>
 
-        <!-- Password -->
+      <!-- Password + Confirm -->
+      <div class="form-row">
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password"
-            placeholder="Create a password" autocomplete="new-password" />
+          <input type="password" id="password" placeholder="Create a password" autocomplete="new-password" />
         </div>
-
-        <!-- Confirm Password -->
         <div class="form-group">
           <label for="confirm-password">Confirm Password</label>
-          <input type="password" id="confirm-password" name="confirm-password"
-            placeholder="Re-enter your password" autocomplete="new-password" />
+          <input type="password" id="confirm-password" placeholder="Re-enter password" autocomplete="new-password" />
         </div>
+      </div>
 
-        <button class="btn-signin" id="signupBtn">Sign Up</button>
+      <button class="btn-signin" id="signupBtn">Create Account →</button>
 
-        <p class="create-account">
-          Already have an account?
-          <a href="../index.html">Sign in</a>
-        </p>
+      <p class="create-account">Already have an account? <a href="../index.html">Sign in</a></p>
+      <p class="create-account" style="margin-top:8px;">← <a href="../landing.html">Back to Home</a></p>
 
-        <p class="create-account" style="margin-top: 10px;">
-          &#8592; <a href="../landing.html">Back to Home</a>
-        </p>
+    </div>
+  </div>
 
-      </div><!-- /left-inner -->
-    </div><!-- /left-panel -->
-
-
-    <!-- RIGHT SIDE: Feature Panel -->
-    <div class="right-panel">
-      <div class="right-inner">
-
-        <h2 class="right-heading">Your personalised path to success.</h2>
-        <p class="right-desc">
-          Stugrowth uses AI to tailor your studies, organise your week, and keep you on track — every step of the way.
-        </p>
-
-        <div class="feature-cards">
-
-          <div class="card">
-            <div class="card-icon">&#x1F9E0;</div>
-            <div class="card-content">
-              <h3>AI Course Matching</h3>
-              <p>Get course recommendations tailored to your goals, strengths, and learning style.</p>
-            </div>
+  <!-- RIGHT: Feature Panel -->
+  <div class="right-panel">
+    <div class="right-inner">
+      <h2 class="right-heading">Your personalised path to success.</h2>
+      <p class="right-desc">Stugrowth uses AI to tailor your studies, organise your week, and keep you on track — every step of the way.</p>
+      <div class="feature-cards">
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <div class="card-content">
+            <h3>Smart Analysis</h3>
+            <p>Get IQ score estimates, learning level detection, and weak subject identification automatically.</p>
           </div>
-
-          <div class="card">
-            <div class="card-icon">&#x1F4C5;</div>
-            <div class="card-content">
-              <h3>Weekly Timetable</h3>
-              <p>Automatically generate a balanced weekly schedule to keep you productive and focused.</p>
-            </div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📋</div>
+          <div class="card-content">
+            <h3>Personalised Plan</h3>
+            <p>Receive a custom daily and weekly study plan tailored to your exact learning level and branch.</p>
           </div>
-
-          <div class="card">
-            <div class="card-icon">&#x1F4C8;</div>
-            <div class="card-content">
-              <h3>Progress Tracking</h3>
-              <p>Visualise your growth with clear milestones and stay motivated every day.</p>
-            </div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎓</div>
+          <div class="card-content">
+            <h3>Course Recommendations</h3>
+            <p>Get courses matched to your branch, weak subjects, and learning pace from top platforms.</p>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        </div><!-- /feature-cards -->
-
-      </div><!-- /right-inner -->
-    </div><!-- /right-panel -->
-
-  </div><!-- /split-screen -->
-
-  <script src="../static/script.js"></script>
+</div>
+<script src="../static/script.js"></script>
 </body>
 </html>
