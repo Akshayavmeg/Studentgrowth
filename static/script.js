@@ -1,629 +1,657 @@
-// =============================================
+// ============================================================
 //   STUGROWTH — script.js
-//   Complete navigation, validation, and plan logic
+//   Handles: Signup, Login, Logout,
+//            Dashboard grade entry + auto-analysis,
+//            Plan page display
 //
 //   FLOW:
-//   1. Signup  → saves Full Name, Class, Password → goes to login
-//   2. Login   → checks credentials → sets isLoggedIn → goes to dashboard
-//   3. Dashboard → shows class-based subject dropdown, marks input, learner level
-//                → on Generate: saves all values → goes to plan.html
-//   4. Plan    → reads all values → generates marks + level based plan
-//   5. Logout  → clears all stored data → goes to login
-// =============================================
+//   1. Signup  → save Full Name, Class, Password → go to login
+//   2. Login   → check credentials → set isLoggedIn → dashboard
+//   3. Dashboard → load subjects by class → enter marks per subject
+//                → click "Analyse Performance" → calculate average
+//                → classify Slow / Average / Fast → save → plan.html
+//   4. Plan    → read saved data → show profile + personalised plan
+//   5. Logout  → clear data → go to login
+// ============================================================
 
 window.onload = function () {
 
-  console.log("Stugrowth loaded successfully!");
-
-  var currentPage = window.location.pathname;
-  console.log("Current page: " + currentPage);
-
-
-  // =============================================
-  // SIGN UP BUTTON — pages/signup.html
-  // Saves Full Name, Class, and Password
-  // then redirects to login page
-  // =============================================
-  var signupBtn = document.getElementById("signupBtn");
+  // ============================================================
+  //  SIGNUP — pages/signup.html
+  //  Fields: fullname, stu-class, password, confirm-password
+  //  Saves: stuFullName, stuClass, stuPassword
+  // ============================================================
+  var signupBtn = document.getElementById('signupBtn');
 
   if (signupBtn) {
-    signupBtn.addEventListener("click", function () {
+    signupBtn.addEventListener('click', function () {
 
-      var fullname        = document.getElementById("fullname").value.trim();
-      var email           = document.getElementById("email").value.trim();
-      var username        = document.getElementById("username").value.trim();
-      var stuClass        = document.getElementById("stu-class").value;
-      var password        = document.getElementById("password").value.trim();
-      var confirmPassword = document.getElementById("confirm-password").value.trim();
+      var fullname  = document.getElementById('fullname').value.trim();
+      var stuClass  = document.getElementById('stu-class').value;
+      var password  = document.getElementById('password').value.trim();
+      var confirm   = document.getElementById('confirm-password').value.trim();
 
-      // Check all fields are filled
-      if (!fullname || !email || !username || !stuClass || !password || !confirmPassword) {
-        alert("Please fill in all the fields before signing up.");
+      // Validate all fields filled
+      if (!fullname || !stuClass || !password || !confirm) {
+        alert('Please fill in all fields before signing up.');
         return;
       }
 
-      // Check both passwords match
-      if (password !== confirmPassword) {
-        alert("Passwords do not match. Please try again.");
+      // Passwords must match
+      if (password !== confirm) {
+        alert('Passwords do not match. Please try again.');
         return;
       }
 
       // Save to localStorage
-      localStorage.setItem("stuFullName", fullname);
-      localStorage.setItem("stuClass",    stuClass);
-      localStorage.setItem("stuPassword", password);
+      localStorage.setItem('stuFullName', fullname);
+      localStorage.setItem('stuClass',    stuClass);
+      localStorage.setItem('stuPassword', password);
 
-      console.log("Signup OK. Name: " + fullname + " | Class: " + stuClass);
+      console.log('Signup OK — Name:', fullname, '| Class:', stuClass);
 
-      // Redirect to login
-      window.location.href = "../index.html";
-
+      // Go to login page
+      window.location.href = '../index.html';
     });
   }
 
 
-  // =============================================
-  // SIGN IN BUTTON — index.html
-  // Validates Full Name + Password against
-  // localStorage. If correct → dashboard.
-  // =============================================
-  var signinBtn = document.getElementById("signinBtn");
+  // ============================================================
+  //  LOGIN — index.html
+  //  Fields: username (= Full Name), password
+  //  Validates against localStorage, sets isLoggedIn
+  // ============================================================
+  var signinBtn = document.getElementById('signinBtn');
 
   if (signinBtn) {
-    signinBtn.addEventListener("click", function () {
+    signinBtn.addEventListener('click', function () {
 
-      var enteredName     = document.getElementById("username").value.trim();
-      var enteredPassword = document.getElementById("password").value.trim();
+      var enteredName = document.getElementById('username').value.trim();
+      var enteredPass = document.getElementById('password').value.trim();
 
-      if (!enteredName || !enteredPassword) {
-        alert("Please enter your Full Name and password.");
+      if (!enteredName || !enteredPass) {
+        alert('Please enter your Full Name and password.');
         return;
       }
 
-      var storedName     = localStorage.getItem("stuFullName");
-      var storedPassword = localStorage.getItem("stuPassword");
+      var storedName = localStorage.getItem('stuFullName');
+      var storedPass = localStorage.getItem('stuPassword');
 
-      if (!storedName || !storedPassword) {
-        alert("No account found. Please register first.");
+      // Check account exists
+      if (!storedName || !storedPass) {
+        alert('No account found. Please register first.');
         return;
       }
 
-      if (enteredName === storedName && enteredPassword === storedPassword) {
-        localStorage.setItem("isLoggedIn", "true");
-        console.log("Login OK. Welcome, " + storedName);
-        window.location.href = "pages/dashboard.html";
+      // Validate credentials
+      if (enteredName === storedName && enteredPass === storedPass) {
+        localStorage.setItem('isLoggedIn', 'true');
+        console.log('Login OK. Welcome,', storedName);
+        window.location.href = 'pages/dashboard.html';
       } else {
-        alert("Invalid login details. Please check your Full Name and password.");
+        alert('Incorrect Full Name or password. Please try again.');
       }
-
     });
   }
 
 
-  // =============================================
-  // CREATE ACCOUNT LINK — index.html
-  // =============================================
-  var createAccountLink = document.getElementById("createAccountLink");
-
+  // ============================================================
+  //  CREATE ACCOUNT LINK — index.html
+  // ============================================================
+  var createAccountLink = document.getElementById('createAccountLink');
   if (createAccountLink) {
-    createAccountLink.addEventListener("click", function (e) {
+    createAccountLink.addEventListener('click', function (e) {
       e.preventDefault();
-      window.location.href = "pages/signup.html";
+      window.location.href = 'pages/signup.html';
     });
   }
 
 
-  // =============================================
-  // GET STARTED BUTTON — landing.html
-  // =============================================
-  var getStartedBtn = document.getElementById("getStartedBtn");
-
+  // ============================================================
+  //  GET STARTED — landing.html
+  // ============================================================
+  var getStartedBtn = document.getElementById('getStartedBtn');
   if (getStartedBtn) {
-    getStartedBtn.addEventListener("click", function () {
-      window.location.href = "pages/signup.html";
+    getStartedBtn.addEventListener('click', function () {
+      window.location.href = 'pages/signup.html';
     });
   }
 
 
-  // =============================================
-  // LOGOUT BUTTON — pages/dashboard.html & plan.html
-  // =============================================
-  var logoutBtn = document.getElementById("logoutBtn");
-
+  // ============================================================
+  //  LOGOUT — dashboard.html, plan.html
+  //  Clears all stored data and goes back to login
+  // ============================================================
+  var logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
-    logoutBtn.addEventListener("click", function () {
-      localStorage.removeItem("stuFullName");
-      localStorage.removeItem("stuClass");
-      localStorage.removeItem("stuPassword");
-      localStorage.removeItem("isLoggedIn");
-      localStorage.removeItem("planName");
-      localStorage.removeItem("planClass");
-      localStorage.removeItem("planSubject");
-      localStorage.removeItem("planMarks");
-      localStorage.removeItem("planLevel");
-      localStorage.removeItem("planGoal");
-      localStorage.removeItem("planHours");
-      console.log("Logged out. All data cleared.");
-      window.location.href = "../index.html";
+    logoutBtn.addEventListener('click', function () {
+      localStorage.clear();
+      console.log('Logged out. All data cleared.');
+      window.location.href = '../index.html';
     });
   }
 
 
-  // =============================================
-  // DASHBOARD — pages/dashboard.html
-  // Protection + topbar name + class-based subjects
-  // + Generate Plan button
-  // =============================================
-  var topbarGreeting    = document.getElementById("topbarGreeting");
-  var welcomeBannerName = document.getElementById("welcomeBannerName");
+  // ============================================================
+  //  DASHBOARD — pages/dashboard.html
+  //  1. Protect page (redirect if not logged in)
+  //  2. Show student name + class
+  //  3. Build subject grade inputs based on class
+  //  4. "Analyse Performance" → calculate avg, classify, save, redirect
+  // ============================================================
+  var gradeForm = document.getElementById('gradeForm');
 
-  if (topbarGreeting || welcomeBannerName) {
+  if (gradeForm) {
 
-    // Protect: redirect if not logged in
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-      window.location.href = "../index.html";
+    // -- Protect page --
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = '../index.html';
       return;
     }
 
-    var fullName  = localStorage.getItem("stuFullName") || "Student";
-    var stuClass  = localStorage.getItem("stuClass")    || "";
+    var fullName = localStorage.getItem('stuFullName') || 'Student';
+    var stuClass = localStorage.getItem('stuClass')    || '';
 
-    // Update topbar and banner
-    if (topbarGreeting) {
-      topbarGreeting.textContent = "Hello, " + fullName + " \uD83D\uDC4B";
-    }
-    if (welcomeBannerName) {
-      welcomeBannerName.textContent = "Welcome back, " + fullName + "! \uD83C\uDF93";
-    }
+    // -- Update topbar greeting --
+    var topbarGreeting = document.getElementById('topbarGreeting');
+    if (topbarGreeting) topbarGreeting.textContent = 'Hello, ' + fullName + ' 👋';
 
-    // Auto-fill Full Name in the form
-    var studentNameInput = document.getElementById("student-name");
-    if (studentNameInput) {
-      studentNameInput.value = fullName;
-    }
+    // -- Update avatar initial --
+    var topbarAvatar = document.getElementById('topbarAvatar');
+    if (topbarAvatar) topbarAvatar.textContent = fullName.charAt(0).toUpperCase();
 
-    // Update avatar initial
-    var dashAvatar = document.getElementById("topbarAvatar");
-    if (dashAvatar && fullName.length > 0) {
-      dashAvatar.textContent = fullName.charAt(0).toUpperCase();
-    }
+    // -- Update welcome banner --
+    var bannerName = document.getElementById('bannerName');
+    if (bannerName) bannerName.textContent = 'Welcome back, ' + fullName + '! 🎓';
 
-    // -- Show class badge in form --
-    var classBadge = document.getElementById("classBadge");
-    if (classBadge) {
-      if (stuClass) {
-        classBadge.innerHTML = "&#x1F393; " + stuClass;
-      } else {
-        classBadge.innerHTML = "&#x26A0;&#xFE0F; No class found — please <a href='../index.html' style='color:#b8892a'>re-register</a>";
+    // -- Show class badge --
+    var classBadge = document.getElementById('classBadge');
+    if (classBadge) classBadge.textContent = stuClass || 'Unknown Class';
+
+    // -- Build grade inputs based on class --
+    var subjects = getSubjectsByClass(stuClass);
+    var gradeInputsContainer = document.getElementById('gradeInputs');
+
+    if (gradeInputsContainer) {
+      gradeInputsContainer.innerHTML = ''; // clear any old inputs
+
+      for (var i = 0; i < subjects.length; i++) {
+        var subject = subjects[i];
+        var safeId  = 'marks_' + i; // safe HTML id
+
+        // Create one row per subject
+        var row = document.createElement('div');
+        row.className = 'grade-row';
+        row.innerHTML =
+          '<div class="grade-subject-name">' +
+            '<span class="grade-subject-icon">📘</span>' +
+            '<span>' + subject + '</span>' +
+          '</div>' +
+          '<div class="grade-input-wrap">' +
+            '<input ' +
+              'type="number" ' +
+              'id="' + safeId + '" ' +
+              'class="grade-input" ' +
+              'placeholder="0–100" ' +
+              'min="0" max="100" ' +
+              'data-subject="' + subject + '"' +
+            ' />' +
+            '<span class="grade-unit">/ 100</span>' +
+          '</div>';
+
+        gradeInputsContainer.appendChild(row);
       }
+
+      // -- Attach live-update listener after inputs are built --
+      // Event delegation on container fires on every keystroke in any input
+      gradeInputsContainer.addEventListener('input', updateInsightCard);
     }
 
-    // -- Populate subject dropdown based on stored class --
-    var subjectSelect = document.getElementById("weak-subject");
-    if (subjectSelect && stuClass) {
-      subjectSelect.innerHTML = '<option value="" disabled selected>Select subject</option>';
+    // -- "Analyse Performance" button --
+    var analyseBtn = document.getElementById('analyseBtn');
+    if (analyseBtn) {
+      analyseBtn.addEventListener('click', function () {
 
-      var subjectMap = getSubjectsByClass(stuClass);
+        // Collect all grade inputs
+        var inputs = document.querySelectorAll('.grade-input');
+        var subjectMarks = {}; // { SubjectName: marks }
+        var total        = 0;
+        var count        = inputs.length;
+        var allFilled    = true;
 
-      for (var i = 0; i < subjectMap.length; i++) {
-        var opt = document.createElement("option");
-        opt.value = subjectMap[i];
-        opt.textContent = subjectMap[i];
-        subjectSelect.appendChild(opt);
-      }
-    }
+        for (var j = 0; j < inputs.length; j++) {
+          var input   = inputs[j];
+          var subName = input.getAttribute('data-subject');
+          var val     = input.value.trim();
 
-    // -- Generate Plan button --
-    var generatePlanBtn = document.getElementById("generatePlanBtn");
-    if (generatePlanBtn) {
-      generatePlanBtn.addEventListener("click", function () {
+          // Check filled
+          if (val === '') {
+            allFilled = false;
+            break;
+          }
 
-        var name    = document.getElementById("student-name").value.trim();
-        var subject = document.getElementById("weak-subject").value;
-        var marks   = document.getElementById("student-marks").value.trim();
-        var level   = document.getElementById("learner-level").value;
-        var goal    = document.getElementById("learning-goal").value;
-        var hours   = document.getElementById("study-hours").value;
+          var numVal = parseInt(val);
 
-        if (!name || !subject || !marks || !level || !goal || !hours) {
-          alert("Please fill in all Academic Information fields.");
+          // Check valid range
+          if (isNaN(numVal) || numVal < 0 || numVal > 100) {
+            alert('Please enter marks between 0 and 100 for all subjects.');
+            return;
+          }
+
+          subjectMarks[subName] = numVal;
+          total += numVal;
+        }
+
+        if (!allFilled) {
+          alert('Please fill in marks for all subjects before analysing.');
           return;
         }
 
-        // Validate marks is a number 0-100
-        var marksNum = parseInt(marks);
-        if (isNaN(marksNum) || marksNum < 0 || marksNum > 100) {
-          alert("Please enter valid marks between 0 and 100.");
-          return;
+        // ── Calculate average ─────────────────────────────────────
+        var average = Math.round(total / count);
+
+        // ── IQ Score formula: IQ = 70 + (average × 0.6) ──────────
+        //    Average  0 → IQ  70
+        //    Average 50 → IQ 100
+        //    Average 80 → IQ 118
+        //    Average 100→ IQ 130
+        var iqScore = Math.round(70 + (average * 0.6));
+
+        // ── Classify level by IQ score ────────────────────────────
+        //    IQ  < 95   → Slow Learner
+        //    IQ 95–115  → Average Learner
+        //    IQ  > 115  → Fast Learner
+        var learnerLevel = '';
+        if (iqScore < 95) {
+          learnerLevel = 'Slow Learner';
+        } else if (iqScore <= 115) {
+          learnerLevel = 'Average Learner';
+        } else {
+          learnerLevel = 'Fast Learner';
         }
 
-        // Save all plan values to localStorage
-        localStorage.setItem("planName",    name);
-        localStorage.setItem("planClass",   stuClass);
-        localStorage.setItem("planSubject", subject);
-        localStorage.setItem("planMarks",   marks);
-        localStorage.setItem("planLevel",   level);
-        localStorage.setItem("planGoal",    goal);
-        localStorage.setItem("planHours",   hours);
+        console.log('Average:', average, '| IQ Score:', iqScore, '| Level:', learnerLevel);
 
-        console.log("Plan saved. Redirecting to plan.html...");
-        window.location.href = "plan.html";
+        // Save all data to localStorage
+        localStorage.setItem('planName',         fullName);
+        localStorage.setItem('planClass',        stuClass);
+        localStorage.setItem('planSubjectMarks', JSON.stringify(subjectMarks));
+        localStorage.setItem('planAverage',      average);
+        localStorage.setItem('planIQ',           iqScore);
+        localStorage.setItem('planLevel',        learnerLevel);
 
+        // Go to plan page
+        window.location.href = 'plan.html';
       });
     }
 
-  }
+  } // end dashboard block
 
 
-  // =============================================
-  // PLAN PAGE — pages/plan.html
-  // Reads all stored values, generates plan
-  // based on marks + learner level
-  // =============================================
-  var planSections      = document.getElementById("planSections");
-  var planSummaryStrip  = document.getElementById("planSummaryStrip");
+  // ============================================================
+  //  PLAN PAGE — pages/plan.html
+  //  Reads saved data, displays profile + personalised plan
+  // ============================================================
+  var planSections = document.getElementById('planSections');
 
   if (planSections) {
 
-    // Protect: redirect if not logged in
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-      window.location.href = "../index.html";
+    // -- Protect page --
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = '../index.html';
       return;
     }
 
-    // Read all stored values
-    var planName    = localStorage.getItem("planName")    || "Student";
-    var planClass   = localStorage.getItem("planClass")   || "your class";
-    var planSubject = localStorage.getItem("planSubject") || "your subject";
-    var planMarks   = parseInt(localStorage.getItem("planMarks"))  || 0;
-    var planLevel   = localStorage.getItem("planLevel")   || "Average Learner";
-    var planGoal    = localStorage.getItem("planGoal")    || "Exam Preparation";
-    var planHours   = localStorage.getItem("planHours")   || "2 hours";
+    // -- Read saved values --
+    var planName    = localStorage.getItem('planName')         || 'Student';
+    var planClass   = localStorage.getItem('planClass')        || 'Unknown Class';
+    var planAvg     = parseInt(localStorage.getItem('planAverage')) || 0;
+    var planLevel   = localStorage.getItem('planLevel')        || 'Average Learner';
+    var marksJSON   = localStorage.getItem('planSubjectMarks') || '{}';
+    var subjectMarks = JSON.parse(marksJSON);
 
-    // Determine marks category
-    var marksCategory = "";
-    var marksCategoryLabel = "";
-    if (planMarks < 40) {
-      marksCategory      = "weak";
-      marksCategoryLabel = "Needs Improvement (Below 40%)";
-    } else if (planMarks <= 75) {
-      marksCategory      = "moderate";
-      marksCategoryLabel = "Moderate (40%–75%)";
-    } else {
-      marksCategory      = "strong";
-      marksCategoryLabel = "Strong (Above 75%)";
+    // -- Update topbar --
+    var planGreeting = document.getElementById('topbarGreeting');
+    if (planGreeting) planGreeting.textContent = 'Hello, ' + planName + ' 👋';
+
+    var planAvatar = document.getElementById('topbarAvatar');
+    if (planAvatar) planAvatar.textContent = planName.charAt(0).toUpperCase();
+
+    // -- Fill profile card --
+    var profileName  = document.getElementById('profileName');
+    var profileClass = document.getElementById('profileClass');
+    var profileAvg   = document.getElementById('profileAvg');
+    var profileLevel = document.getElementById('profileLevel');
+    if (profileName)  profileName.textContent  = planName;
+    if (profileClass) profileClass.textContent = planClass;
+    if (profileAvg)   profileAvg.textContent   = planAvg + ' / 100';
+    if (profileLevel) profileLevel.textContent = planLevel;
+
+    // -- Fill subject marks table --
+    var subjectTableBody = document.getElementById('subjectTableBody');
+    if (subjectTableBody) {
+      var tableHTML = '';
+      for (var subj in subjectMarks) {
+        if (subjectMarks.hasOwnProperty(subj)) {
+          var m = subjectMarks[subj];
+          var statusIcon =
+            m < 40  ? '🔴' :
+            m <= 75 ? '🟡' : '🟢';
+          var statusLabel =
+            m < 40  ? 'Needs Work' :
+            m <= 75 ? 'Moderate'   : 'Strong';
+          tableHTML +=
+            '<tr>' +
+              '<td>' + subj + '</td>' +
+              '<td><strong>' + m + ' / 100</strong></td>' +
+              '<td>' + statusIcon + ' ' + statusLabel + '</td>' +
+            '</tr>';
+        }
+      }
+      subjectTableBody.innerHTML = tableHTML;
     }
 
-    console.log("Plan page. Name:", planName, "| Marks:", planMarks, "| Level:", planLevel);
-
-    // Update topbar greeting and avatar
-    var planGreeting = document.getElementById("topbarGreeting");
-    if (planGreeting) {
-      planGreeting.textContent = "Hello, " + planName + " \uD83D\uDC4B";
-    }
-    var planAvatar = document.getElementById("topbarAvatar");
-    if (planAvatar) {
-      planAvatar.textContent = planName.charAt(0).toUpperCase();
-    }
-
-    // Update intro text
-    var planIntroText = document.getElementById("planIntroText");
-    if (planIntroText) {
-      planIntroText.textContent =
-        planName + "'s personalised plan for " + planClass +
-        " | " + planSubject + " | Marks: " + planMarks + "/100 | " + planLevel;
-    }
-
-    // Level badge in eyebrow
-    var levelBadge = document.getElementById("planLevelBadge");
+    // -- Set level badge colour --
+    var levelBadge = document.getElementById('levelBadge');
     if (levelBadge) {
       levelBadge.textContent = planLevel;
+      if (planLevel === 'Slow Learner') {
+        levelBadge.className = 'level-badge slow';
+      } else if (planLevel === 'Average Learner') {
+        levelBadge.className = 'level-badge average';
+      } else {
+        levelBadge.className = 'level-badge fast';
+      }
     }
 
-    // -- Marks strength banner --
-    var marksBanner = document.getElementById("marksBanner");
-    if (marksBanner) {
-      var bannerIcon, bannerTitle, bannerDesc, bannerClass;
-      if (marksCategory === "weak") {
-        bannerClass = "weak";
-        bannerIcon  = "&#x1F534;";
-        bannerTitle = "Needs Improvement — Marks: " + planMarks + "/100";
-        bannerDesc  = "Your plan is focused on building strong basics, daily revision, and slow-paced concept mastery in " + planSubject + ".";
-      } else if (marksCategory === "moderate") {
-        bannerClass = "moderate";
-        bannerIcon  = "&#x1F7E1;";
-        bannerTitle = "Moderate Performance — Marks: " + planMarks + "/100";
-        bannerDesc  = "Your plan balances learning new topics with regular practice problems and weekly revision in " + planSubject + ".";
-      } else {
-        bannerClass = "strong";
-        bannerIcon  = "&#x1F7E2;";
-        bannerTitle = "Strong Performance — Marks: " + planMarks + "/100";
-        bannerDesc  = "Your plan pushes toward advanced problems, competitive prep, and deep mastery in " + planSubject + ".";
-      }
-      marksBanner.innerHTML =
-        '<div class="marks-banner ' + bannerClass + '">' +
-          '<div class="marks-banner-icon">' + bannerIcon + '</div>' +
-          '<div class="marks-banner-text">' +
-            '<h3>' + bannerTitle + '</h3>' +
-            '<p>' + bannerDesc + '</p>' +
+    // -- Generate personalised plan cards --
+    var plan = getPlanContent(planLevel, planClass);
+    planSections.innerHTML =
+      buildPlanCard('📅', 'Daily Study Routine',    plan.dailyRoutine) +
+      buildPlanCard('📋', 'Weekly Study Plan',      plan.weeklyPlan)   +
+      buildPlanCard('💡', 'Tips & Strategy',        plan.tips)         +
+      buildCourseCard(planLevel, planClass);
+  }
+
+
+  // ============================================================
+  //  HELPER: Returns subjects list for a given class
+  // ============================================================
+  function getSubjectsByClass(cls) {
+    var map = {
+      '10th Class':       ['Mathematics', 'Science', 'English', 'Social Studies'],
+      '11th Class':       ['Mathematics', 'Physics', 'Chemistry', 'English', 'Economics'],
+      '12th Class':       ['Mathematics', 'Physics', 'Chemistry', 'English', 'Economics'],
+      'B.Tech 1st Year':  ['Mathematics', 'Physics', 'Programming (C/C++)', 'Electrical Basics'],
+      'B.Tech 2nd Year':  ['Data Structures', 'Mathematics', 'Electronics', 'Object Oriented Programming'],
+      // Fallback for any other class
+      '8th Class':        ['Mathematics', 'Science', 'English', 'Social Studies'],
+      '9th Class':        ['Mathematics', 'Science', 'English', 'Social Studies'],
+      'B.Tech 3rd Year':  ['Algorithms', 'Database Systems', 'Operating Systems', 'Computer Networks'],
+      'B.Tech 4th Year':  ['Machine Learning', 'Cloud Computing', 'Advanced Algorithms', 'Elective Subject'],
+      'Diploma 1st Year': ['Mathematics', 'Physics', 'Workshop Practice', 'Basic Electronics'],
+      'Diploma 2nd Year': ['Applied Mathematics', 'Electrical Circuits', 'Computer Basics', 'Mechanical Drawing']
+    };
+    return map[cls] || ['Mathematics', 'Science', 'English', 'General Studies'];
+  }
+
+
+  // ============================================================
+  //  HELPER: Builds one plan card HTML string
+  // ============================================================
+  function buildPlanCard(icon, title, steps) {
+    var stepsHTML = '';
+    for (var i = 0; i < steps.length; i++) {
+      stepsHTML +=
+        '<div class="plan-step">' +
+          '<div class="plan-step-num">' + (i + 1) + '</div>' +
+          '<div class="plan-step-content">' +
+            '<p class="plan-step-title">'  + steps[i].title  + '</p>' +
+            '<p class="plan-step-detail">' + steps[i].detail + '</p>' +
           '</div>' +
         '</div>';
     }
-
-    // Summary tags
-    if (planSummaryStrip) {
-      var levelIcon = planLevel === "Slow Learner" ? "&#x1F331;" :
-                      planLevel === "Fast Learner" ? "&#x26A1;"  : "&#x1F4CA;";
-      var marksIcon = marksCategory === "weak"     ? "&#x1F534;" :
-                      marksCategory === "strong"   ? "&#x1F7E2;" : "&#x1F7E1;";
-
-      planSummaryStrip.innerHTML =
-        '<span class="plan-tag">&#x1F393; ' + planClass   + '</span>' +
-        '<span class="plan-tag">&#x1F4D6; ' + planSubject + '</span>' +
-        '<span class="plan-tag">' + marksIcon + ' ' + planMarks + '/100 — ' + marksCategoryLabel + '</span>' +
-        '<span class="plan-tag">' + levelIcon + ' ' + planLevel + '</span>' +
-        '<span class="plan-tag">&#x23F0; '  + planHours   + '/day</span>';
-    }
-
-    // =============================================
-    // GENERATE PLAN CARDS
-    // 3 cards: Student Profile, Study Plan, Tips
-    // Content varies by: marksCategory + planLevel
-    // =============================================
-
-    // -- Card 1: Student Profile Summary --
-    var card1 =
+    return (
       '<div class="plan-card">' +
         '<div class="plan-card-header">' +
-          '<span class="plan-card-icon">&#x1F393;</span>' +
-          '<h2 class="plan-card-title">Student Profile</h2>' +
+          '<span class="plan-card-icon">' + icon  + '</span>' +
+          '<h2 class="plan-card-title">'  + title + '</h2>' +
         '</div>' +
-        '<div class="plan-steps">' +
-          buildStep(1, "Name",        planName) +
-          buildStep(2, "Class",       planClass) +
-          buildStep(3, "Subject",     planSubject) +
-          buildStep(4, "Marks",       planMarks + " / 100  —  " + marksCategoryLabel) +
-          buildStep(5, "Learner Type", planLevel) +
-          buildStep(6, "Daily Hours", planHours + " of focused study per day") +
-        '</div>' +
-      '</div>';
-
-    // -- Card 2: Daily Study Plan (marks + level based) --
-    var card2 = buildStudyPlanCard(planSubject, planMarks, planLevel, planHours, marksCategory);
-
-    // -- Card 3: Weekly Plan (marks + level based) --
-    var card3 = buildWeeklyPlanCard(planSubject, planMarks, planLevel, marksCategory);
-
-    // -- Card 4: Personalised Recommendations --
-    var card4 = buildRecommendationsCard(planSubject, planMarks, planLevel, planGoal, marksCategory);
-
-    // Inject all cards
-    planSections.innerHTML = card1 + card2 + card3 + card4;
-  }
-
-
-  // =============================================
-  // HELPER: Builds a single step row
-  // =============================================
-  function buildStep(num, title, detail) {
-    return (
-      '<div class="plan-step">' +
-        '<div class="plan-step-num">' + num + '</div>' +
-        '<div class="plan-step-content">' +
-          '<p class="plan-step-title">' + title + '</p>' +
-          '<p class="plan-step-detail">' + detail + '</p>' +
-        '</div>' +
+        '<div class="plan-steps">' + stepsHTML + '</div>' +
       '</div>'
     );
   }
 
 
-  // =============================================
-  // HELPER: Returns subjects array for a given class
-  // =============================================
-  function getSubjectsByClass(cls) {
-    var map = {
-      "8th Class":        ["Mathematics", "Science", "English", "Social Studies", "Hindi"],
-      "9th Class":        ["Mathematics", "Science", "English", "Social Studies", "Hindi"],
-      "10th Class":       ["Mathematics", "Science", "English", "Social Studies", "Hindi"],
-      "11th Class":       ["Mathematics", "Physics", "Chemistry", "Biology", "English", "Economics"],
-      "12th Class":       ["Mathematics", "Physics", "Chemistry", "Biology", "English", "Economics"],
-      "B.Tech 1st Year":  ["Mathematics", "Physics", "Programming (C/C++)", "Electrical Basics", "English"],
-      "B.Tech 2nd Year":  ["Data Structures", "Mathematics", "Electronics", "Object Oriented Programming", "Digital Logic"],
-      "B.Tech 3rd Year":  ["Algorithms", "Database Systems", "Operating Systems", "Computer Networks", "Software Engineering"],
-      "B.Tech 4th Year":  ["Machine Learning", "Cloud Computing", "Project Management", "Advanced Algorithms", "Elective Subject"],
-      "Diploma 1st Year": ["Mathematics", "Physics", "Workshop Practice", "English", "Basic Electronics"],
-      "Diploma 2nd Year": ["Applied Mathematics", "Mechanical Drawing", "Electrical Circuits", "Computer Basics"]
-    };
-    return map[cls] || ["Mathematics", "Science", "English"];
+  // ============================================================
+  //  HELPER: Returns plan content object based on learner level
+  // ============================================================
+  function getPlanContent(level, cls) {
+
+    if (level === 'Slow Learner') {
+      return {
+        dailyRoutine: [
+          { title: 'Study 1–2 Hours Daily', detail: 'Shorter sessions help slow learners retain information better. Study 1 to 2 hours each day with a 10-minute break every 30 minutes.' },
+          { title: 'Start with the Basics', detail: 'Do not move to new topics until you are confident with the current one. Re-read the same chapter multiple times if needed.' },
+          { title: 'Write Notes by Hand', detail: 'Handwriting notes improves memory. After reading a topic, write down 5 key points in your own words.' },
+          { title: 'Revise Before Sleeping', detail: 'Spend 10 minutes reading your notes before bed every night. Your brain processes and stores information while you sleep.' }
+        ],
+        weeklyPlan: [
+          { title: 'Monday & Tuesday — Learn',   detail: 'Slowly study one new topic. Read it once, then read it again. Write down anything you don\'t understand.' },
+          { title: 'Wednesday — Revise',          detail: 'Go back over Monday and Tuesday\'s topics. Re-read your notes and highlight the most important points.' },
+          { title: 'Thursday & Friday — Practice', detail: 'Solve 2 to 3 simple questions on each topic you studied. Ask your teacher if you are stuck.' },
+          { title: 'Saturday — Full Revision',    detail: 'Re-read all notes from this week. Redo any questions you got wrong. Make a simple summary sheet.' },
+          { title: 'Sunday — Rest',               detail: 'Complete rest. No studying today. Let your brain absorb everything from the week.' }
+        ],
+        tips: [
+          { title: 'Be Patient with Yourself',  detail: 'Learning takes time. Everyone moves at a different pace — what matters is that you keep going. Never give up.' },
+          { title: 'Use Diagrams and Colours',   detail: 'Draw pictures, flowcharts, or use coloured pens when taking notes. Visual learners remember better through images.' },
+          { title: 'Ask for Help Immediately',   detail: 'If you do not understand something, ask your teacher the same day. Do not wait — confusion grows quickly.' },
+          { title: 'Celebrate Small Wins',       detail: 'Every topic you finish, every question you get right — these are real achievements. Reward yourself and build confidence.' }
+        ]
+      };
+
+    } else if (level === 'Average Learner') {
+      return {
+        dailyRoutine: [
+          { title: 'Study 2–3 Hours Daily', detail: 'Split your time: 1 hour in the morning and 1–2 hours in the evening. Keep a consistent routine every day including weekends.' },
+          { title: 'Morning Warm-Up (15 min)', detail: 'Start each session by spending 15 minutes reading yesterday\'s notes before starting new material.' },
+          { title: 'Core Study Block', detail: 'Spend the main block on your weakest subject first — when your energy is highest. Take notes as you go.' },
+          { title: 'Evening Practice', detail: 'Solve 5 to 8 practice questions every evening. Focus specifically on the types of questions you got wrong before.' }
+        ],
+        weeklyPlan: [
+          { title: 'Monday–Wednesday — Learn',   detail: 'Cover new chapters and topics. Read carefully, take notes, and highlight key formulas or definitions.' },
+          { title: 'Thursday–Friday — Practice', detail: 'Solve past paper questions. Attempt at least one full question set per subject each day.' },
+          { title: 'Saturday — Revision',        detail: 'Revise the full week. Rewrite key points in your own words. Make a one-page summary sheet per subject.' },
+          { title: 'Sunday — Light Review',      detail: 'Rest, but spend 20 minutes reading your summary sheets. Optionally watch a short video on one topic.' }
+        ],
+        tips: [
+          { title: 'Target Your Weak Topics First', detail: 'List the 2 or 3 topics where you lose the most marks in each subject. Study those first every week.' },
+          { title: 'Practise Under Time Pressure',  detail: 'Set a 30-minute timer and solve questions without looking at the textbook. This builds exam speed and confidence.' },
+          { title: 'Use Past Papers',               detail: 'Solve 2 to 3 years of past exam papers. They reveal the exact question types and patterns that examiners prefer.' },
+          { title: 'Improve Week by Week',          detail: 'Do not try to improve everything at once. Pick one subject per week to focus on deeply and improve it steadily.' }
+        ]
+      };
+
+    } else {
+      // Fast Learner
+      return {
+        dailyRoutine: [
+          { title: 'Study 3–5 Hours Daily', detail: 'Fast learners can handle long study sessions. Study 3 to 5 hours daily, split into two focused blocks with a proper break in between.' },
+          { title: 'Cover 2–3 Topics Per Session', detail: 'Do not just read one topic per day. Push yourself to cover 2 to 3 chapters or advanced topics in each session.' },
+          { title: 'Timed Problem Solving', detail: 'Set a 20-minute timer and solve as many questions as possible. Track your score each day and try to beat yesterday\'s count.' },
+          { title: 'Teach to Reinforce', detail: 'After finishing a topic, explain it out loud as if you are teaching someone. Teaching exposes gaps in your own understanding.' }
+        ],
+        weeklyPlan: [
+          { title: 'Monday–Wednesday — Advanced Topics', detail: 'Study complex, high-weightage chapters and go beyond the standard syllabus. Explore advanced examples and proofs.' },
+          { title: 'Thursday — Full Mock Test',           detail: 'Attempt a complete timed mock test covering all subjects. Simulate real exam conditions — no interruptions.' },
+          { title: 'Friday — Error Analysis',             detail: 'Review every single mistake from Thursday\'s test. Understand why each error happened and how to avoid it.' },
+          { title: 'Saturday — Challenge Problems',       detail: 'Attempt olympiad-level or competitive exam problems. Push beyond what is comfortable.' },
+          { title: 'Sunday — Plan & Rest',                detail: 'Review this week\'s progress and set specific targets for next week. Rest in the afternoon.' }
+        ],
+        tips: [
+          { title: 'Depth Over Speed',          detail: 'Fast learners often rush. Make sure you truly understand every concept deeply — not just memorise it on the surface.' },
+          { title: 'Explore Beyond Textbooks',  detail: 'Read reference books, university notes, or watch MIT/IIT lecture videos. Go far beyond what your syllabus requires.' },
+          { title: 'Help Your Classmates',      detail: 'Teaching others is the highest form of learning. Helping slower classmates deepens your own understanding significantly.' },
+          { title: 'Set Competitive Goals',     detail: 'Aim for top ranks, olympiads, or entrance exam cutoffs. Having a big goal keeps a fast learner sharp and motivated.' }
+        ]
+      };
+    }
   }
 
 
-  // =============================================
-  // HELPER: Daily Study Plan Card
-  // =============================================
-  function buildStudyPlanCard(subject, marks, level, hours, category) {
-    var icon  = "&#x1F4C5;";
-    var title = "Daily Study Plan";
-
-    var step1, step2, step3, step4;
-
-    if (category === "weak") {
-      // Below 40 — basic concepts, slow pace, more revision
-      step1 = buildStep(1, "Start with Basics",
-        "Begin each session by reading the simplest introduction of " + subject + ". Don't skip to harder topics yet.");
-      step2 = buildStep(2, "Short Study Blocks",
-        "Study for 25 minutes, then take a 10-minute break. Repeat. Don't try to study for long hours at once.");
-      step3 = buildStep(3, "Daily Revision",
-        "Spend the last 20 minutes of each day re-reading everything you studied. Revision is more important than new topics right now.");
-      step4 = buildStep(4, "One Question at a Time",
-        "Solve just 2–3 easy practice questions on " + subject + " each day. Focus on understanding, not speed.");
-    } else if (category === "moderate") {
-      // 40–75 — balanced learning + practice
-      step1 = buildStep(1, "Morning Warm-Up",
-        "Spend 15 minutes reviewing yesterday's notes in " + subject + " before starting new material.");
-      step2 = buildStep(2, "Core Study Block",
-        "Dedicate " + hours + " to studying new topics in " + subject + ". Take short notes as you go.");
-      step3 = buildStep(3, "Practice Problems",
-        "Solve 5 to 8 practice questions from " + subject + " each day. Focus on weak areas.");
-      step4 = buildStep(4, "Evening Recap",
-        "Spend 10 minutes writing a short summary of what you learned — in your own words.");
-    } else {
-      // Above 75 — advanced pace, challenges
-      step1 = buildStep(1, "Advanced Topic Deep Dive",
-        "Cover 2 to 3 chapters or advanced topics in " + subject + " per session. Push beyond the syllabus.");
-      step2 = buildStep(2, "Timed Problem Solving",
-        "Set a 20-minute timer and solve as many problems as possible from " + subject + ". Track your score each day.");
-      step3 = buildStep(3, "Explore Beyond Textbooks",
-        "After finishing each topic, read one extra resource — video, article, or solved example — on " + subject + ".");
-      step4 = buildStep(4, "Teach or Explain",
-        "Explain today's topics out loud or to a friend. Teaching strengthens deep understanding.");
+  // ============================================================
+  //  HELPER: Builds recommended courses card
+  //  Based on learner level and class
+  // ============================================================
+  function buildCourseCard(level, cls) {
+    var courses = getRecommendedCourses(level, cls);
+    var coursesHTML = '';
+    for (var i = 0; i < courses.length; i++) {
+      var c = courses[i];
+      coursesHTML +=
+        '<div class="course-item">' +
+          '<div class="course-item-icon">' + c.icon + '</div>' +
+          '<div class="course-item-body">' +
+            '<p class="course-item-title">'    + c.title    + '</p>' +
+            '<p class="course-item-platform">' + c.platform + '</p>' +
+            '<p class="course-item-desc">'     + c.desc     + '</p>' +
+          '</div>' +
+        '</div>';
     }
-
-    // Adjust intensity based on learner level
-    var levelNote = "";
-    if (level === "Slow Learner") {
-      levelNote = buildStep(5, "Slow Learner Tip",
-        "Don't rush. It is completely fine to spend 2–3 days on one topic. Understanding matters more than speed.");
-    } else if (level === "Fast Learner") {
-      levelNote = buildStep(5, "Fast Learner Tip",
-        "Challenge yourself: after finishing today's plan early, attempt one harder bonus question from " + subject + ".");
-    } else {
-      levelNote = buildStep(5, "Average Learner Tip",
-        "Balance is key. After completing your study block, take a proper break before attempting practice problems.");
-    }
-
     return (
       '<div class="plan-card">' +
         '<div class="plan-card-header">' +
-          '<span class="plan-card-icon">' + icon + '</span>' +
-          '<h2 class="plan-card-title">' + title + '</h2>' +
+          '<span class="plan-card-icon">🎓</span>' +
+          '<h2 class="plan-card-title">Recommended Courses</h2>' +
         '</div>' +
-        '<div class="plan-steps">' +
-          step1 + step2 + step3 + step4 + levelNote +
-        '</div>' +
+        '<div class="course-list">' + coursesHTML + '</div>' +
       '</div>'
     );
   }
 
 
-  // =============================================
-  // HELPER: Weekly Study Plan Card
-  // =============================================
-  function buildWeeklyPlanCard(subject, marks, level, category) {
-    var w1, w2, w3, w4, w5;
+  // ============================================================
+  //  HELPER: Returns recommended courses for level + class
+  // ============================================================
+  function getRecommendedCourses(level, cls) {
 
-    if (category === "weak") {
-      w1 = buildStep(1, "Monday & Tuesday — Learn",
-        "Read and understand one basic concept from " + subject + ". Write down key points.");
-      w2 = buildStep(2, "Wednesday — Revise",
-        "Revise everything from Monday and Tuesday before touching anything new.");
-      w3 = buildStep(3, "Thursday & Friday — Practice",
-        "Solve 3–5 simple questions on the concept. Ask for help if stuck.");
-      w4 = buildStep(4, "Saturday — Full Revision",
-        "Review the entire week's work. Redo any questions you got wrong.");
-      w5 = buildStep(5, "Sunday — Rest",
-        "Complete rest. No studying today. Let your brain absorb everything from the week.");
-    } else if (category === "moderate") {
-      w1 = buildStep(1, "Monday – Wednesday — Learn",
-        "Cover new topics in " + subject + ". Read carefully, take notes, and highlight important points.");
-      w2 = buildStep(2, "Thursday – Friday — Practice",
-        "Solve practice questions and attempt at least one past paper question set on the covered topics.");
-      w3 = buildStep(3, "Saturday — Revision",
-        "Revise the whole week. Rewrite key points in your own words. Make a one-page summary sheet.");
-      w4 = buildStep(4, "Sunday — Light Review",
-        "Rest, but spend 20 minutes reviewing your summary sheet. Watch a topic video if you feel like it.");
-      w5 = "";
-    } else {
-      w1 = buildStep(1, "Monday – Wednesday — Advanced Topics",
-        "Cover complex chapters and high-weightage topics in " + subject + ".");
-      w2 = buildStep(2, "Thursday — Full Mock Test",
-        "Attempt a timed, full-length mock test or past paper from " + subject + ".");
-      w3 = buildStep(3, "Friday — Error Analysis",
-        "Review every mistake from Thursday's test. Understand each error and fix your approach.");
-      w4 = buildStep(4, "Saturday — Challenge Problems",
-        "Attempt high-difficulty or olympiad-level problems in " + subject + " to push your limits.");
-      w5 = buildStep(5, "Sunday — Target Setting",
-        "Rest and plan next week's goals. Identify which topics to improve based on this week's test.");
+    // Engineering / B.Tech courses
+    if (cls.indexOf('B.Tech') !== -1 || cls.indexOf('Diploma') !== -1) {
+      if (level === 'Slow Learner') {
+        return [
+          { icon: '🎬', title: 'Programming Basics for Beginners',     platform: 'YouTube (Apna College)',       desc: 'Start from zero — variables, loops, functions. Watch slowly and code along.' },
+          { icon: '📐', title: 'Engineering Mathematics — Foundation', platform: 'NPTEL Free Course',             desc: 'Clear basics of calculus, matrices, and integration with step-by-step examples.' },
+          { icon: '⚡', title: 'Basic Electrical Engineering',          platform: 'Khan Academy (Free)',           desc: 'Understand circuits, voltage, and current with interactive exercises.' },
+          { icon: '📚', title: 'Study Skills for Engineering Students', platform: 'Coursera (Audit Free)',         desc: 'Learn how to read textbooks, take notes, and manage your time as an engineering student.' }
+        ];
+      } else if (level === 'Average Learner') {
+        return [
+          { icon: '💻', title: 'Data Structures and Algorithms',        platform: 'GeeksforGeeks / YouTube',      desc: 'Practice arrays, linked lists, stacks, and recursion with solved examples.' },
+          { icon: '📐', title: 'Engineering Maths — Problem Solving',   platform: 'NPTEL Free Course',             desc: 'Practice-focused course on differential equations, transforms, and probability.' },
+          { icon: '🔧', title: 'Object Oriented Programming (Java/C++)',  platform: 'Udemy (Free Trial)',           desc: 'Learn classes, objects, inheritance, and polymorphism with coding projects.' },
+          { icon: '🌐', title: 'Computer Networks Basics',              platform: 'YouTube (Gate Smashers)',       desc: 'Understand OSI model, TCP/IP, and protocols clearly with visual diagrams.' }
+        ];
+      } else {
+        return [
+          { icon: '🤖', title: 'Machine Learning with Python',          platform: 'Coursera — Andrew Ng (Free Audit)', desc: 'Learn regression, classification, neural networks. The best ML course available.' },
+          { icon: '💡', title: 'Competitive Programming',               platform: 'Codeforces / LeetCode',         desc: 'Solve 3 problems daily. Start from Easy, move to Medium and Hard systematically.' },
+          { icon: '☁️', title: 'Cloud Computing — AWS / Azure',         platform: 'AWS Free Tier + Coursera',      desc: 'Get hands-on with real cloud deployments. Earn a free certification.' },
+          { icon: '📊', title: 'System Design and Architecture',         platform: 'GitHub (System Design Primer)', desc: 'Prepare for top tech company interviews by learning scalable system design.' }
+        ];
+      }
     }
 
-    return (
-      '<div class="plan-card">' +
-        '<div class="plan-card-header">' +
-          '<span class="plan-card-icon">&#x1F5D3;&#xFE0F;</span>' +
-          '<h2 class="plan-card-title">Weekly Study Plan</h2>' +
-        '</div>' +
-        '<div class="plan-steps">' +
-          w1 + w2 + w3 + w4 + w5 +
-        '</div>' +
-      '</div>'
-    );
+    // School — 10th, 11th, 12th
+    if (level === 'Slow Learner') {
+      return [
+        { icon: '🎬', title: 'Maths Basics — Class 10',               platform: 'YouTube (Vedantu / Byju\'s)',   desc: 'Short videos (10–15 min) on each chapter. Watch the same video twice until it is clear.' },
+        { icon: '🔬', title: 'Science Fundamentals for Beginners',     platform: 'Khan Academy (Free)',           desc: 'Interactive lessons on physics, chemistry, and biology from complete scratch.' },
+        { icon: '📝', title: 'English Grammar Foundation',             platform: 'YouTube (Dear Sir)',            desc: 'Learn sentence structure, grammar rules, and writing skills step by step.' },
+        { icon: '📖', title: 'NCERT Reading Plan — Chapter by Chapter', platform: 'NCERT Website (Free PDF)',      desc: 'Follow the NCERT textbooks carefully, chapter by chapter, before touching any guide.' }
+      ];
+    } else if (level === 'Average Learner') {
+      return [
+        { icon: '📐', title: 'Mathematics — Practice Problems',         platform: 'YouTube (Vedantu CBSE)',        desc: 'Watch solved examples, then try on your own. Focus on topics with the most exam weightage.' },
+        { icon: '🔬', title: 'Physics & Chemistry — Concept Clarity',   platform: 'Khan Academy / NCERT',          desc: 'Master derivations and chemical equations with visual and animated explanations.' },
+        { icon: '📄', title: 'Board Exam Previous Papers',              platform: 'CBSE Official Website',         desc: 'Solve last 5 years of board papers. Check the answer key and analyse every mistake.' },
+        { icon: '✏️', title: 'Vocabulary & Essay Writing',              platform: 'YouTube (Iken Edu)',            desc: 'Build your English writing skills — structure, vocabulary, and grammar for board exams.' }
+      ];
+    } else {
+      return [
+        { icon: '🏆', title: 'JEE / NEET Foundation Course',            platform: 'Unacademy / PW App (Free)',     desc: 'Start competitive exam preparation early with structured courses from top teachers.' },
+        { icon: '📐', title: 'Advanced Mathematics — IIT Level',        platform: 'YouTube (Nexa Classes)',        desc: 'Solve JEE-level maths problems. Focus on speed, accuracy, and shortcut techniques.' },
+        { icon: '🔭', title: 'Science Olympiad Preparation',            platform: 'Olympiad Tester Website',       desc: 'Attempt Science Olympiad practice tests to go beyond the school syllabus.' },
+        { icon: '💬', title: 'Advanced English — Writing & Reading',    platform: 'Coursera (Michigan University)', desc: 'Prepare for higher studies by strengthening academic reading and writing skills.' }
+      ];
+    }
+  }
+
+  // ============================================================
+  //  LIVE INSIGHT CARD — pages/dashboard.html
+  //  Called on every 'input' event inside #gradeInputs.
+  //  Recalculates average → IQ → level and updates the three
+  //  right-panel values in real time with no page reload.
+  //
+  //  IQ Formula : IQ = 70 + (average × 0.6)
+  //  Level rules: IQ  < 95   → Slow Learner
+  //               IQ 95–115  → Average Learner
+  //               IQ  > 115  → Fast Learner
+  // ============================================================
+  function updateInsightCard() {
+
+    var inputs = document.querySelectorAll('.grade-input');
+    if (!inputs.length) return;
+
+    var total  = 0;
+    var filled = 0;
+
+    // Sum every valid input (0–100); skip blanks and invalid values
+    for (var i = 0; i < inputs.length; i++) {
+      var v = parseInt(inputs[i].value);
+      if (!isNaN(v) && v >= 0 && v <= 100) {
+        total  += v;
+        filled += 1;
+      }
+    }
+
+    var iqEl  = document.getElementById('insightIQ');
+    var lvlEl = document.getElementById('insightLevel');
+    var avgEl = document.getElementById('insightAvg');
+
+    // If no valid marks yet → reset panel to dashes
+    if (filled === 0) {
+      if (iqEl)  { iqEl.textContent  = '--'; iqEl.className  = 'insight-value'; }
+      if (lvlEl) { lvlEl.textContent = '--'; lvlEl.className = 'insight-value'; }
+      if (avgEl) { avgEl.textContent = '--'; avgEl.className = 'insight-value'; }
+      return;
+    }
+
+    // Calculate average from only the fields that have been filled
+    var avg = Math.round(total / filled);
+
+    // Apply IQ formula
+    var iq = Math.round(70 + (avg * 0.6));
+
+    // Classify by IQ
+    var level = '';
+    var levelIcon = '';
+    if (iq < 95) {
+      level     = 'Slow Learner';
+      levelIcon = '🔴 ';
+    } else if (iq <= 115) {
+      level     = 'Average Learner';
+      levelIcon = '🟡 ';
+    } else {
+      level     = 'Fast Learner';
+      levelIcon = '🟢 ';
+    }
+
+    // Update the three insight card values and apply the gold 'live' style
+    if (iqEl)  { iqEl.textContent  = iq;                      iqEl.className  = 'insight-value live'; }
+    if (lvlEl) { lvlEl.textContent = levelIcon + level;        lvlEl.className = 'insight-value live'; }
+    if (avgEl) { avgEl.textContent = avg + ' / 100';           avgEl.className = 'insight-value live'; }
   }
 
 
-  // =============================================
-  // HELPER: Personalised Recommendations Card
-  // =============================================
-  function buildRecommendationsCard(subject, marks, level, goal, category) {
-    var r1, r2, r3, r4;
-
-    // Based on marks category
-    if (category === "weak") {
-      r1 = buildStep(1, "Focus on Concepts First",
-        "Do not attempt hard problems yet. Spend time understanding every basic concept in " + subject + " clearly.");
-      r2 = buildStep(2, "Get Extra Help",
-        "Ask your teacher to explain topics you don't understand. Don't stay stuck — seek help early.");
-      r3 = buildStep(3, "Use Simple Study Resources",
-        "Watch beginner-level YouTube videos on " + subject + " topics to build confidence.");
-      r4 = buildStep(4, "Track Small Wins",
-        "After every topic you complete, tick it off. Seeing progress builds motivation.");
-    } else if (category === "moderate") {
-      r1 = buildStep(1, "Identify Your Weak Topics",
-        "List the 3 topics in " + subject + " where you lose the most marks. Target them first each week.");
-      r2 = buildStep(2, "Use Past Papers",
-        "Solve last year's exam questions on " + subject + ". They reveal the exact pattern and type of questions.");
-      r3 = buildStep(3, "Improve Step-by-Step",
-        "Don't try to master everything at once. Improve one topic per week until you're confident.");
-      r4 = buildStep(4, "Practice Under Time Pressure",
-        "Occasionally set a 30-minute timer and solve questions. Building speed is important for exams.");
-    } else {
-      r1 = buildStep(1, "Go Beyond the Syllabus",
-        "Read advanced material on " + subject + " — research articles, university notes, or competitive guides.");
-      r2 = buildStep(2, "Attempt Competitive Problems",
-        "Try olympiad-level or entrance exam problems in " + subject + " to sharpen your analytical skills.");
-      r3 = buildStep(3, "Teach Others",
-        "Help a classmate with " + subject + ". Teaching reinforces your own understanding at a deep level.");
-      r4 = buildStep(4, "Target Perfection",
-        "Analyse every mistake — even one wrong answer. Understand exactly why, and make sure it never happens again.");
-    }
-
-    // Add one personalised goal-based tip
-    var goalTip = "";
-    if (goal === "Exam Preparation") {
-      goalTip = buildStep(5, "Exam Tip",
-        "Make a countdown chart to your exam date. Divide topics of " + subject + " across the available days.");
-    } else if (goal === "Skill Building") {
-      goalTip = buildStep(5, "Skill Tip",
-        "Apply each concept you learn in " + subject + " to a mini project or real example to build practical skills.");
-    } else if (goal === "Concept Clarity") {
-      goalTip = buildStep(5, "Clarity Tip",
-        "For every topic in " + subject + ", write a 3-sentence plain English explanation in your own words.");
-    } else {
-      goalTip = buildStep(5, "General Tip",
-        "Set a clear, measurable weekly target for " + subject + " and review it every Sunday evening.");
-    }
-
-    return (
-      '<div class="plan-card">' +
-        '<div class="plan-card-header">' +
-          '<span class="plan-card-icon">&#x1F4A1;</span>' +
-          '<h2 class="plan-card-title">Personalised Recommendations</h2>' +
-        '</div>' +
-        '<div class="plan-steps">' +
-          r1 + r2 + r3 + r4 + goalTip +
-        '</div>' +
-      '</div>'
-    );
-  }
-
-};
+}; // end window.onload
